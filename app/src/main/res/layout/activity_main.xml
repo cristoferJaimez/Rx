@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.dev.rx.MainActivity">
+
+    <androidx.camera.view.PreviewView
+        android:id="@+id/previewView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+
+    <TextureView
+        android:id="@+id/textureView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="-1dp" />
+
+    <Button
+        android:id="@+id/btnCapture"
+        android:layout_width="wrap_content"
+        android:layout_height="82dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="21dp"
+        android:layout_marginTop="616dp"
+        android:layout_marginEnd="22dp"
+        android:layout_marginBottom="33dp"
+        android:background="@drawable/btn_oval"
+        android:contentDescription="spaceBar" />
+
+    <ImageButton
+        android:id="@+id/btnTake"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/btnCapture"
+        android:layout_alignTop="@+id/btnCapture"
+        android:layout_alignEnd="@+id/btnCapture"
+        android:layout_alignBottom="@+id/btnCapture"
+        android:layout_marginStart="131dp"
+        android:layout_marginTop="9dp"
+        android:layout_marginEnd="131dp"
+        android:layout_marginBottom="9dp"
+        android:contentDescription="cameraIcon"
+        app:srcCompat="@android:drawable/ic_menu_camera" />
+
+    <ImageButton
+        android:id="@+id/btnGallery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/btnCapture"
+        android:layout_alignTop="@+id/btnCapture"
+        android:layout_alignEnd="@+id/btnCapture"
+        android:layout_alignBottom="@+id/btnCapture"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="246dp"
+        android:layout_marginBottom="9dp"
+        android:contentDescription="btnGallery"
+        app:srcCompat="@android:drawable/ic_menu_gallery" />
+
+    <ImageButton
+        android:id="@+id/btnFolder"
+        android:layout_width="53dp"
+        android:layout_height="50dp"
+        android:layout_alignStart="@+id/btnCapture"
+        android:layout_alignTop="@+id/btnCapture"
+        android:layout_alignEnd="@+id/btnCapture"
+        android:layout_alignBottom="@+id/btnCapture"
+        android:layout_marginStart="246dp"
+        android:layout_marginTop="9dp"
+        android:layout_marginEnd="21dp"
+        android:layout_marginBottom="9dp"
+        android:contentDescription="btnFolder"
+        app:srcCompat="@android:drawable/ic_search_category_default" />
+
+</RelativeLayout>
