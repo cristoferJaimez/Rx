@@ -47,8 +47,8 @@ public class ResultView extends View {
 
         if (mResults == null) return;
         for (Result result : mResults) {
-
-            if (!PrePostProcessor.mClasses[result.classIndex].equals("date")) {
+            System.out.println(result.classIndex);
+            if ( result.classIndex != 4 ) {
 
                 // Cargar la imagen desde el archivo en assets
                 Bitmap bmp = null;
@@ -61,8 +61,8 @@ public class ResultView extends View {
                 }
 
                 // Calcular la escala necesaria para que la imagen ocupe todo el ancho de la caja
-                float scaleX = (float) result.rect.width() / (bmp.getWidth() );
-                float scaleY = (float) result.rect.height() / (bmp.getHeight() );
+                float scaleX = (float) result.rect.width() / (bmp.getWidth());
+                float scaleY = (float) result.rect.height() / (bmp.getHeight());
 
                 // Calcular la escala más pequeña para mantener la proporción original
                 float scale = Math.min(scaleX, scaleY);
@@ -78,16 +78,14 @@ public class ResultView extends View {
                 // Establecer el objeto BitmapShader como shader del Paint
                 mPaintRectangle.setShader(shader);
                 // Reducir el tamaño de la caja dibujada en un porcentaje
-                float reductionPercentage = 0.99f; // 20% de reducción
-                int reducedWidth = (int) (result.rect.width() * (1 - reductionPercentage));
-                int reducedHeight = (int) (result.rect.height() * (1 - reductionPercentage));
-                int widthDifference = result.rect.width() - reducedWidth;
-                int heightDifference = result.rect.height() - reducedHeight;
-                RectF reducedRect = new RectF(result.rect.left + (widthDifference / 2), result.rect.top + (heightDifference / 2), result.rect.right - (widthDifference / 2), result.rect.bottom - (heightDifference / 2));
+                //float reductionPercentage = 0.99f; // 20% de reducción
+                //int reducedWidth = (int) (result.rect.width() * (1 - reductionPercentage));
+                //int reducedHeight = (int) (result.rect.height() * (1 - reductionPercentage));
+                //int widthDifference = result.rect.width() - reducedWidth;
+                //int heightDifference = result.rect.height() - reducedHeight;
+                //RectF reducedRect = new RectF(result.rect.left + (widthDifference / 2), result.rect.top + (heightDifference / 2), result.rect.right - (widthDifference / 2), result.rect.bottom - (heightDifference / 2));
 
                 canvas.drawRect(result.rect, mPaintRectangle);
-            }else{
-
             }
         }
     }

@@ -22,7 +22,7 @@ public class IndexActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(IndexActivity.this, MainActivity.class);
+                Intent intent = new Intent(IndexActivity.this, ObjectDetectionActivity.class);
                 startActivity(intent);
                 finish();
             }

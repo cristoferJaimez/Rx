@@ -151,10 +151,17 @@ public class ObjectDetectionActivity extends AbstractCameraXActivity<ObjectDetec
                     Canvas canvas = new Canvas(mixedBitmap);
                     canvas.drawBitmap(bitmap, new Matrix(), null);
                     canvas.drawBitmap(resizedResultBitmap, new Matrix(), null);
-                    saveImageToGallery(mixedBitmap);
 
-
-
+                    //vista previa
+                    // Reducir la calidad de la imagen
+                    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                    mixedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream); // 50 es el nivel de calidad, puedes ajustarlo según tus necesidades
+                    byte[] byteArray = outputStream.toByteArray();
+                    final Intent intent = new Intent(ObjectDetectionActivity.this, ViewPicture.class);
+                    intent.putExtra("mixedBitmap", byteArray);
+                    // Inicia la actividad ViewPicture
+                    startActivity(intent);
+                    //saveImageToGallery(mixedBitmap);
                 }
             }
         });
@@ -180,36 +187,6 @@ public class ObjectDetectionActivity extends AbstractCameraXActivity<ObjectDetec
 
 
 
-
-    private void saveImageToGallery(Bitmap bitmap) {
-        String timeStamp = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        }
-        String imageFileName = "IMG_" + timeStamp + ".png";
-
-        ContentValues values = new ContentValues();
-        values.put(MediaStore.Images.Media.TITLE, imageFileName);
-        values.put(MediaStore.Images.Media.DISPLAY_NAME, imageFileName);
-        values.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
-        values.put(MediaStore.Images.Media.DATE_ADDED, System.currentTimeMillis());
-        values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
-        values.put(MediaStore.Images.Media.DATA, Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + imageFileName);
-
-        Uri uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-
-        try {
-            OutputStream out = getContentResolver().openOutputStream(uri);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
-            out.flush();
-            out.close();
-
-            Toast.makeText(this, "Image saved to gallery", Toast.LENGTH_SHORT).show();
-        } catch (IOException e) {
-            Log.e("ObjectDetectionActivity", "Error saving image to gallery", e);
-            Toast.makeText(this, "Error saving image to gallery", Toast.LENGTH_SHORT).show();
-        }
-    }
 
 
 
