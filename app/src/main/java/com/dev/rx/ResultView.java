@@ -47,7 +47,7 @@ public class ResultView extends View {
 
         if (mResults == null) return;
         for (Result result : mResults) {
-            System.out.println(result.classIndex);
+            //System.out.println(result.classIndex);
             if ( result.classIndex != 4 ) {
 
                 // Cargar la imagen desde el archivo en assets

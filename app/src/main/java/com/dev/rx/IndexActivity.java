@@ -10,6 +10,8 @@ import android.util.DisplayMetrics;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 
+import com.dev.rx.db.MongoConnect;
+
 public class IndexActivity extends AppCompatActivity {
 
     @Override
@@ -17,12 +19,12 @@ public class IndexActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_index);
 
-
+        //new MongoConnect(this).connect();
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(IndexActivity.this, ObjectDetectionActivity.class);
+                Intent intent = new Intent(IndexActivity.this, Login.class);
                 startActivity(intent);
                 finish();
             }

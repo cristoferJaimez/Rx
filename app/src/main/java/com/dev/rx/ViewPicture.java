@@ -105,7 +105,6 @@ public class ViewPicture extends AppCompatActivity {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         // Si el usuario confirma el guardado, guarda la imagen en la galería
                         saveImageToGallery(bitmap);
-                        Toast.makeText(ViewPicture.this, "Imagen guardada en la galería", Toast.LENGTH_SHORT).show();
                         // Cierra la actividad actual y vuelve a la actividad anterior
                         finish();
                     }
@@ -143,7 +142,8 @@ public class ViewPicture extends AppCompatActivity {
             out.flush();
             out.close();
 
-            Toast.makeText(this, "Image saved to gallery", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ViewPicture.this, "Imagen guardada en la galería", Toast.LENGTH_SHORT).show();
+
         } catch (IOException e) {
             Log.e("ObjectDetectionActivity", "Error saving image to gallery", e);
             Toast.makeText(this, "Error saving image to gallery", Toast.LENGTH_SHORT).show();

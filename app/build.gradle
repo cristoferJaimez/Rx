@@ -60,4 +60,7 @@ dependencies {
     // Kotlin
     implementation "androidx.biometric:biometric-ktx:1.2.0-alpha05"
 
+    //db mongo
+    implementation 'org.mongodb:mongodb-driver-sync:4.4.1'
+
 }

@@ -6,23 +6,67 @@
     android:layout_height="match_parent"
     tools:context=".Login">
 
-    <ImageButton
-        android:id="@+id/biometric_login"
-        android:layout_width="155dp"
+    <EditText
+        android:id="@+id/editTextTextPersonName"
+        android:layout_width="303dp"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="53dp"
+        android:layout_marginEnd="53dp"
+        android:layout_marginBottom="397dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Name" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="161dp"
+        android:layout_marginBottom="268dp"
+        android:text="Button" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="143dp"
+        android:layout_height="143dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="130dp"
-        android:layout_marginTop="595dp"
-        android:layout_marginEnd="130dp"
-        android:layout_marginBottom="40dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.943"
-        app:srcCompat="@drawable/ic_launcher_foreground" />
+        android:layout_marginStart="134dp"
+        android:layout_marginTop="112dp"
+        android:layout_marginEnd="134dp"
+        android:layout_marginBottom="477dp"
+        app:srcCompat="@drawable/ic_launcher" />
+
+    <EditText
+        android:id="@+id/editTextTextPassword2"
+        android:layout_width="309dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="53dp"
+        android:layout_marginEnd="53dp"
+        android:layout_marginBottom="342dp"
+        android:ems="10"
+        android:inputType="textPassword" />
+
+    <ImageButton
+        android:id="@+id/biometric_login"
+        android:layout_width="150dp"
+        android:layout_height="163dp"
+
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="131dp"
+        android:layout_marginBottom="37dp"
+        app:srcCompat="@drawable/ic_launcher" />
+
+
 </RelativeLayout>
