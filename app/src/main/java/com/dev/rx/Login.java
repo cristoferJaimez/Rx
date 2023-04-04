@@ -8,14 +8,22 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.biometric.BiometricManager;
 import androidx.biometric.BiometricPrompt;
 import androidx.core.content.ContextCompat;
+import androidx.core.os.BuildCompat;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
+
+import org.pytorch.torchvision.BuildConfig;
 
 import java.util.concurrent.Executor;
 
@@ -26,10 +34,52 @@ public class Login extends AppCompatActivity {
     private BiometricPrompt biometricPrompt;
     private BiometricPrompt.PromptInfo promptInfo;
 
+    private Button btnLogin;
+    private  EditText  usernameEditText, passwordEditText;
+
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+
+        btnLogin = findViewById(R.id.btnLogin);
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                usernameEditText = findViewById(R.id.editTextUserName);
+                passwordEditText = findViewById(R.id.editTextTextPassword);
+
+
+                String username = usernameEditText.getText().toString().trim();
+                String password = passwordEditText.getText().toString().trim();
+
+                usernameEditText.setHint("Escribe aquí tú nombre de usuario");
+                passwordEditText.setHint("Escribe aquí tú contraseña");
+
+
+                if (TextUtils.isEmpty(username)) {
+                    Toast.makeText(Login.this, "Ingrese su nombre de usuario", Toast.LENGTH_SHORT).show();
+                    usernameEditText.requestFocus();
+                    return;
+                }
+
+                if (TextUtils.isEmpty(password)) {
+                    Toast.makeText(Login.this, "Ingrese su contraseña", Toast.LENGTH_SHORT).show();
+                    passwordEditText.requestFocus();
+                    return;
+                }else{
+                    Toast.makeText(getApplicationContext(),
+                            "Authentication succeeded!", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(Login.this, ObjectDetectionActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
+
+
+
 
         BiometricManager biometricManager = BiometricManager.from(this);
         switch (biometricManager.canAuthenticate(BIOMETRIC_STRONG | DEVICE_CREDENTIAL)) {

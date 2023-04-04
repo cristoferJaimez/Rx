@@ -50,10 +50,11 @@ public class FtpUpload {
             ftpClient.storeFile("Rx_"+name, inputStream);
             // Mostrar un Toast en el hilo principal de la aplicación
             Activity activity = (Activity) mContext;
+            String finalName = "Rx_"+name;
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(mContext, "Archivo cargado exitosamente", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "Archivo: " + finalName + " cargado exitosamente", Toast.LENGTH_SHORT).show();
                 }
             });
 

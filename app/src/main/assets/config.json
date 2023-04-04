@@ -1,0 +1,30 @@
+{
+  "database": {
+    "host": "localhost",
+    "port": 3306,
+    "username": "myusername",
+    "password": "mypassword"
+  },
+  "api": {
+    "url": "https://api.miservicio.com",
+    "key": "myapikey"
+  },
+  "data": {
+    "country": "CO",
+    "city": "Bogotá",
+    "type": "Independiente",
+    "title": "farma_cristo",
+    "code": "0001",
+    "url": "",
+    "user": "",
+    "pw": ""
+  },
+  "credentials": {
+    "user": "admin",
+    "pw": "12345",
+    "photo": "",
+    "lat": "",
+    "lng": ""
+  }
+}
+  

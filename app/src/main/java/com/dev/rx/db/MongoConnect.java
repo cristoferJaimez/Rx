@@ -3,7 +3,7 @@ package com.dev.rx.db;
 import android.app.Activity;
 import android.content.Context;
 import android.widget.Toast;
-
+/*
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoException;
@@ -15,8 +15,10 @@ import com.mongodb.ServerApiVersion;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
-
+*/
 public class MongoConnect {
+  /*
+
     private Context mContext;
 
     public MongoConnect(Context context) {
@@ -51,4 +53,6 @@ public class MongoConnect {
             e.printStackTrace();
         }
     }
+
+   */
 }
