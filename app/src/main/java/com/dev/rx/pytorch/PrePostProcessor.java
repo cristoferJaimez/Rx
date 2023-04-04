@@ -1,4 +1,4 @@
-package com.dev.rx;
+package com.dev.rx.pytorch;
 
 import android.graphics.Rect;
 

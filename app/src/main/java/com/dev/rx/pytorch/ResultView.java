@@ -1,4 +1,4 @@
-package com.dev.rx;
+package com.dev.rx.pytorch;
 
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -9,10 +9,11 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.RectF;
 import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.view.View;
+
+import com.dev.rx.pytorch.Result;
 
 import java.io.IOException;
 import java.io.InputStream;

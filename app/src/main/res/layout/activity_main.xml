@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.dev.rx.MainActivity">
+    tools:context="com.dev.rx.pytorch.MainActivity">
 
     <ImageView
         android:id="@+id/imageView"
@@ -18,7 +18,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.dev.rx.ResultView
+    <com.dev.rx.pytorch.ResultView
         android:id="@+id/resultView"
         android:layout_width="0dp"
         android:layout_height="0dp"

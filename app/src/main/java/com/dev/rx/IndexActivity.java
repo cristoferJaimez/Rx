@@ -2,15 +2,11 @@ package com.dev.rx;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.DisplayMetrics;
-import android.view.animation.OvershootInterpolator;
-import android.widget.ImageView;
 
-import com.dev.rx.db.MongoConnect;
+import com.dev.rx.login.Login;
 
 public class IndexActivity extends AppCompatActivity {
 

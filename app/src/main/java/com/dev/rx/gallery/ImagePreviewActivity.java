@@ -1,4 +1,4 @@
-package com.dev.rx;
+package com.dev.rx.gallery;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.dev.rx.R;
 
 public class ImagePreviewActivity extends AppCompatActivity {
 

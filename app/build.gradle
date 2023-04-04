@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "com.dev.rx"
-        minSdk 23
+        minSdk 30
         targetSdk 33
         versionCode 1
         multiDexEnabled true

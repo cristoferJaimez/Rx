@@ -1,4 +1,4 @@
-package com.dev.rx;
+package com.dev.rx.gallery;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,7 +20,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
+import com.dev.rx.R;
+import com.dev.rx.pytorch.ObjectDetectionActivity;
 
 import java.io.IOException;
 import java.io.OutputStream;

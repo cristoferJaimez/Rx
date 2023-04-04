@@ -1,4 +1,4 @@
-package com.dev.rx;
+package com.dev.rx.login;
 
 import static androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG;
 import static androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL;
@@ -8,11 +8,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.biometric.BiometricManager;
 import androidx.biometric.BiometricPrompt;
 import androidx.core.content.ContextCompat;
-import androidx.core.os.BuildCompat;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
@@ -23,8 +21,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import org.pytorch.torchvision.BuildConfig;
-
+import com.dev.rx.R;
+import com.dev.rx.pytorch.ObjectDetectionActivity;
+import com.dev.rx.register.Geo;
 import java.util.concurrent.Executor;
 
 public class Login extends AppCompatActivity {
@@ -34,7 +33,7 @@ public class Login extends AppCompatActivity {
     private BiometricPrompt biometricPrompt;
     private BiometricPrompt.PromptInfo promptInfo;
 
-    private Button btnLogin;
+    private Button btnLogin, btnRegister;
     private  EditText  usernameEditText, passwordEditText;
 
     @SuppressLint("MissingInflatedId")
@@ -43,20 +42,36 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-
+        usernameEditText = findViewById(R.id.editTextUserName);
+        passwordEditText = findViewById(R.id.editTextTextPassword);
         btnLogin = findViewById(R.id.btnLogin);
+        btnRegister = findViewById(R.id.btnRegister);
+
+        //texto para cepdas placeholder
+        String email = getString(R.string.email);
+        String password = getString(R.string.password);
+        String user = getString(R.string.user);
+        String pw = getString(R.string.pw);
+
+        //
+
+        if(!TextUtils.isEmpty(user) && !TextUtils.isEmpty(pw)  ){
+            usernameEditText.setText(user);
+            passwordEditText.setText(pw);
+        }else{
+            usernameEditText.setHint(email);
+            passwordEditText.setHint(password);
+        }
+
+
+
+
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                usernameEditText = findViewById(R.id.editTextUserName);
-                passwordEditText = findViewById(R.id.editTextTextPassword);
-
 
                 String username = usernameEditText.getText().toString().trim();
                 String password = passwordEditText.getText().toString().trim();
-
-                usernameEditText.setHint("Escribe aquí tú nombre de usuario");
-                passwordEditText.setHint("Escribe aquí tú contraseña");
 
 
                 if (TextUtils.isEmpty(username)) {
@@ -69,12 +84,27 @@ public class Login extends AppCompatActivity {
                     Toast.makeText(Login.this, "Ingrese su contraseña", Toast.LENGTH_SHORT).show();
                     passwordEditText.requestFocus();
                     return;
-                }else{
+                }
+                //if(username.matches("^[a-zA-Z]+[0-9]{4}$")){
+                //    Toast.makeText(Login.this, "El usuario no contiene el formato debido", Toast.LENGTH_SHORT).show();
+                //    usernameEditText.requestFocus();
+                //    return;
+                //}
+                else{
                     Toast.makeText(getApplicationContext(),
                             "Authentication succeeded!", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(Login.this, ObjectDetectionActivity.class);
                     startActivity(intent);
                 }
+            }
+        });
+
+        btnRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(Login.this, Geo.class);
+                startActivity(intent);
             }
         });
 

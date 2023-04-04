@@ -1,6 +1,5 @@
-package com.dev.rx;
+package com.dev.rx.pytorch;
 
-import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,22 +8,21 @@ import android.graphics.ImageFormat;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.YuvImage;
-import android.icu.text.SimpleDateFormat;
 import android.media.Image;
 import android.media.MediaPlayer;
-import android.net.Uri;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 import androidx.camera.core.ImageProxy;
+
+import com.dev.rx.gallery.Gallery;
+import com.dev.rx.R;
+import com.dev.rx.gallery.ViewPicture;
 
 import org.pytorch.IValue;
 import org.pytorch.LiteModuleLoader;
@@ -34,10 +32,8 @@ import org.pytorch.torchvision.TensorImageUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class ObjectDetectionActivity extends AbstractCameraXActivity<ObjectDetectionActivity.AnalysisResult> {
     private Module mModule = null;

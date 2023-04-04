@@ -15,32 +15,35 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Design.NoActionBar">
         <activity
-            android:name=".Login"
-            android:configChanges="orientation"
-            android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:name=".register.Geo"
+            android:exported="false" />
         <activity
-            android:name=".ViewPicture"
-            android:configChanges="orientation"
-            android:exported="false"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".ImagePreviewActivity"
+            android:name=".login.Login"
             android:configChanges="orientation"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Gallery"
+            android:name=".gallery.ViewPicture"
             android:configChanges="orientation"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".MainActivity"
+            android:name=".gallery.ImagePreviewActivity"
             android:configChanges="orientation"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ObjectDetectionActivity"
+            android:name=".gallery.Gallery"
+            android:configChanges="orientation"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".pytorch.MainActivity"
+            android:configChanges="orientation"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".pytorch.ObjectDetectionActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity
@@ -50,10 +53,10 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>

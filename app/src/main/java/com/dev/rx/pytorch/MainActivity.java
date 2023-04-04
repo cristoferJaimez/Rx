@@ -1,4 +1,4 @@
-package com.dev.rx;
+package com.dev.rx.pytorch;
 
 
 import androidx.appcompat.app.AlertDialog;
@@ -23,6 +23,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+
+import com.dev.rx.R;
 
 import org.pytorch.IValue;
 import org.pytorch.LiteModuleLoader;
