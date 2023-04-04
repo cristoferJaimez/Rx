@@ -16,7 +16,9 @@
         android:theme="@style/Theme.Design.NoActionBar">
         <activity
             android:name=".register.Geo"
-            android:exported="false" />
+            android:configChanges="orientation"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".login.Login"
             android:configChanges="orientation"

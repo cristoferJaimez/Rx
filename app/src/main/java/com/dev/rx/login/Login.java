@@ -11,6 +11,8 @@ import androidx.core.content.ContextCompat;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.content.res.XmlResourceParser;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
@@ -24,6 +26,11 @@ import android.widget.Toast;
 import com.dev.rx.R;
 import com.dev.rx.pytorch.ObjectDetectionActivity;
 import com.dev.rx.register.Geo;
+
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
 import java.util.concurrent.Executor;
 
 public class Login extends AppCompatActivity {
@@ -47,20 +54,26 @@ public class Login extends AppCompatActivity {
         btnLogin = findViewById(R.id.btnLogin);
         btnRegister = findViewById(R.id.btnRegister);
 
-        //texto para cepdas placeholder
-        String email = getString(R.string.email);
-        String password = getString(R.string.password);
-        String user = getString(R.string.user);
-        String pw = getString(R.string.pw);
+        String user = null;
+        XmlResourceParser parser = getResources().getXml(R.xml.config);
 
-        //
+        try {
+            int eventType = parser.getEventType();
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                if (eventType == XmlPullParser.START_TAG && parser.getName().equals("user")) {
+                    user = parser.nextText();
+                    break;
+                }
+                eventType = parser.next();
+            }
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        if(!TextUtils.isEmpty(user) && !TextUtils.isEmpty(pw)  ){
+        if (user != null) {
             usernameEditText.setText(user);
-            passwordEditText.setText(pw);
-        }else{
-            usernameEditText.setHint(email);
-            passwordEditText.setHint(password);
         }
 
 
