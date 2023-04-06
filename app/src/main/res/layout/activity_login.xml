@@ -63,26 +63,20 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/editTextTextPassword"
             android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="30dp"
-            android:background="#8A1515"
-            android:text="Iniciar sesión" />
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="15dp"
+            android:text="Inicias Sesión" />
 
         <Button
             android:id="@+id/btnRegister"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/btnLogin"
-            android:layout_alignParentStart="true"
+            android:layout_below="@+id/editTextTextPassword"
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="30dp"
-            android:layout_marginBottom="30dp"
-            android:background="#8A1515"
-            android:text="Registro" />
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="10dp"
+            android:text="Registrase" />
+
     </RelativeLayout>
 
     <ImageButton

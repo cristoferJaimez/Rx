@@ -14,7 +14,7 @@
     <!--custom color-->
     <color name="icons">#8A1515</color>
     <color name="colorSpinnerText">#000000</color>
-
+    <color name="textEditOK">#ABA6D379</color>
 
     <style name="SpinnerStyle" >
         <item name="android:textColor">@color/colorSpinnerText</item>

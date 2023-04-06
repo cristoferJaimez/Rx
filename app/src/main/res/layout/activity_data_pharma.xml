@@ -7,17 +7,17 @@
     android:background="@drawable/spinner_border"
     tools:context=".register.DataPharma">
 
+
     <RelativeLayout
-        android:layout_width="354dp"
-        android:layout_height="348dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="310dp"
+        android:layout_marginTop="350dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginBottom="73dp"
+        android:layout_marginBottom="30dp"
         android:background="@drawable/spinner_border">
 
         <Spinner
@@ -33,6 +33,27 @@
             android:layout_marginEnd="10dp"
             android:entries="@array/typePharma"
             android:theme="@style/SpinnerStyle" />
+
+
+        <Button
+            android:id="@+id/btnback2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/spinner"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="237dp"
+            android:text="Anterior" />
+
+        <Button
+            android:id="@+id/btnEnd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/spinner"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="238dp"
+            android:layout_marginEnd="10dp"
+            android:text="Finalizar" />
 
     </RelativeLayout>
 

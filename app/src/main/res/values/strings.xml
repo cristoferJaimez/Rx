@@ -6,4 +6,7 @@
     <string name="restart">Restart</string>
     <string name="select">Select</string>
     <string name="live">Live</string>
+
+    <string name="lat">Lat</string>
+    <string name="lng">Lng</string>
 </resources>

@@ -41,6 +41,10 @@ public class Gallery extends AppCompatActivity {
         btnFTP = findViewById(R.id.btnFTP);
 
 
+
+
+
+
         // Obtener las rutas de las imágenes
         File directory = new File(Environment.getExternalStorageDirectory() + "/Pictures/");
         File[] files = directory.listFiles();

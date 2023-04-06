@@ -6,17 +6,46 @@
     android:layout_height="match_parent"
     tools:context=".register.Geo">
 
+
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="200dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="60dp"
         android:background="@drawable/spinner_border">
+
+        <ImageView
+            android:id="@+id/imagePhotoPre"
+            android:layout_width="match_parent"
+            android:layout_height="175dp"
+            android:layout_below="@+id/editTextTextLat"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="20dp"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/remove_image_photo_icon_400x361" />
+
+        <ImageView
+            android:id="@+id/imageLocality"
+            android:layout_width="match_parent"
+            android:layout_height="175dp"
+            android:layout_below="@+id/imagePhotoPre"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="20dp"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/remove_image_photo_icon_400x361" />
+
 
         <EditText
             android:id="@+id/editTextTextCountry"
@@ -27,7 +56,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="5dp"
             android:layout_marginEnd="20dp"
             android:ellipsize="none"
             android:ems="10"
@@ -52,7 +81,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="0dp"
             android:layout_marginEnd="20dp"
             android:ellipsize="none"
             android:ems="10"
@@ -77,7 +106,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="0dp"
             android:layout_marginEnd="20dp"
             android:ellipsize="none"
             android:ems="10"
@@ -88,6 +117,7 @@
             android:singleLine="true"
             android:textAlignment="center"
             android:textColorHint="@android:color/black"
+            android:textSize="14dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.491"
             app:layout_constraintStart_toStartOf="parent"
@@ -102,7 +132,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="0dp"
             android:layout_marginEnd="20dp"
             android:ellipsize="none"
             android:ems="10"
@@ -126,7 +156,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="0dp"
             android:layout_marginEnd="20dp"
             android:ellipsize="none"
             android:ems="10"
@@ -145,24 +175,23 @@
             android:id="@+id/btnNext"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/editTextTextLat"
+            android:layout_below="@+id/imageLocality"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="30dp"
-            android:layout_marginEnd="26dp"
-            android:layout_marginBottom="40dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="20dp"
             android:text="siguiente" />
 
         <Button
             android:id="@+id/btnBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/editTextTextLat"
+            android:layout_below="@+id/imageLocality"
             android:layout_alignParentStart="true"
-            android:layout_marginStart="26dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginBottom="40dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
             android:text="Anterior" />
 
 
     </RelativeLayout>
+
 </RelativeLayout>
