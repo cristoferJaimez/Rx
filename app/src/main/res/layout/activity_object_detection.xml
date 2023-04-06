@@ -30,13 +30,15 @@
 
     <ImageButton
         android:id="@+id/btnTakePicture"
-        android:layout_width="85dp"
-        android:layout_height="71dp"
-        android:layout_marginBottom="28dp"
+        android:layout_width="83dp"
+        android:layout_height="81dp"
+        android:layout_marginBottom="12dp"
+        android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/resultView"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@android:drawable/ic_menu_camera" />
+        app:srcCompat="@drawable/icon_camera_32x32_red" />
 
     <ImageButton
         android:id="@+id/btnGallery"
@@ -47,7 +49,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.076"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@android:drawable/ic_menu_gallery" />
+        android:background="@color/white"
+        app:srcCompat="@drawable/icon_gallery_32x32" />
 
     <Switch
         android:id="@+id/switch1"
@@ -58,6 +61,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.945"
         app:layout_constraintStart_toStartOf="parent"
+
         app:layout_constraintTop_toTopOf="@+id/resultView" />
 
     <Switch

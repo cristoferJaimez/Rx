@@ -2,9 +2,79 @@
 <resources>
     <color name="purple_200">#B81133</color>
     <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="purple_700">#B81133</color>
+    <color name="teal_200">#000000</color>
+    <color name="teal_700">#000000</color>
+    <color name="black">#911515</color>
+    <color name="white">#FFFFFF</color>
+    <color name="gray">#000000</color>
+
+
+
+    <!--custom color-->
+    <color name="icons">#8A1515</color>
+    <color name="colorSpinnerText">#000000</color>
+
+
+    <style name="SpinnerStyle" >
+        <item name="android:textColor">@color/colorSpinnerText</item>
+        <item name="android:background">#F5F5F5</item>
+        <item name="android:layout_height">64dp</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:drawableLeft">@drawable/medical_pharmacy_store_icon_16x16</item>
+    </style>
+
+
+
+
+    <style name="EditTextStylePw" parent="Widget.AppCompat.EditText">
+        <item name="android:background">#f5f5f5</item>
+        <item name="android:textColor">#670909</item>
+        <item name="android:drawableLeft">@drawable/icon_pw_30x30</item>
+    </style>
+
+
+    <style name="EditTextStyleUser" parent="Widget.AppCompat.EditText">
+        <item name="android:background">#f5f5f5</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:drawableLeft">@drawable/icon_user_circle_light_32x32</item>
+    </style>
+
+
+
+    <style name="EditTextStyleCountry" parent="Widget.AppCompat.EditText">
+        <item name="android:background">#f5f5f5</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:drawableLeft">@drawable/country_icon_32x32</item>
+    </style>
+
+    <style name="EditTextStyleCity" parent="Widget.AppCompat.EditText">
+        <item name="android:background">#f5f5f5</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:drawableLeft">@drawable/flats_residential_apartment_icon_32x32</item>
+    </style>
+
+    <style name="EditTextStyleAddress" parent="Widget.AppCompat.EditText">
+        <item name="android:background">#f5f5f5</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:drawableLeft">@drawable/home_address_icon_32x32</item>
+    </style>
+
+    <style name="EditTextStyleCoord" parent="Widget.AppCompat.EditText">
+        <item name="android:background">#f5f5f5</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:drawableLeft">@drawable/location_target_icon_20x20</item>
+    </style>
+
+
+
+    <style name="EditTextStyleSelectPharma" parent="Widget.AppCompat.EditText">
+        <item name="android:background">#f5f5f5</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:drawableLeft">@drawable/medical_pharmacy_store_icon_32_32</item>
+    </style>
+
+
+
 </resources>

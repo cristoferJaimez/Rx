@@ -26,7 +26,8 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="64dp"
         android:layout_marginBottom="18dp"
-        app:srcCompat="@android:drawable/ic_menu_save" />
+        android:background="@null"
+        app:srcCompat="@drawable/icon_floppy_50x50" />
 
     <ImageButton
         android:id="@+id/btnBackCamera"
@@ -40,6 +41,7 @@
         android:layout_marginTop="11dp"
         android:layout_marginEnd="235dp"
         android:layout_marginBottom="16dp"
-        app:srcCompat="@android:drawable/presence_offline" />
+        android:background="@null"
+        app:srcCompat="@drawable/icon_camera_50x50_blue" />
 
 </RelativeLayout>

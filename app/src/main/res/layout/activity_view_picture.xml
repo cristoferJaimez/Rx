@@ -30,7 +30,8 @@
         android:layout_marginTop="21dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="659dp"
-        app:srcCompat="@android:drawable/ic_menu_save" />
+        android:background="@null"
+        app:srcCompat="@drawable/icon_floppy_50x50" />
 
     <ImageButton
         android:id="@+id/btnDelete"
@@ -44,6 +45,7 @@
         android:layout_marginTop="24dp"
         android:layout_marginEnd="253dp"
         android:layout_marginBottom="656dp"
-        app:srcCompat="@android:drawable/ic_menu_delete" />
+        android:background="@null"
+        app:srcCompat="@drawable/icon_clear_50x50" />
 
 </RelativeLayout>
