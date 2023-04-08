@@ -107,46 +107,19 @@ public class Geo extends AppCompatActivity {
 
                 String ftp = "Rx/"+country+"/"+city+"/"+typePharma+"/"+classPharma+"/"+namePharma+"/";
 
-                // Usa Glide para cargar la imagen desde la URL en un ImageView
-                Glide.with(Geo.this)
-                        .asBitmap()
-                        .load(dbUrlMap)
-                        .into(new SimpleTarget<Bitmap>() {
-                                                      @Override
-                            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                                // Convierte la imagen en un arreglo de bytes
-                                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                                resource.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-                                byte[] byteArray = byteArrayOutputStream.toByteArray();
-
-                                // Codifica la imagen en base 64
-                                encodedImageMap = Base64.encodeToString(byteArray, Base64.DEFAULT);
-                                Log.d("imageMap", encodedImageMap);
-                            }
-                        });
-
-                // Usa Glide para cargar la imagen desde la URL en un ImageView
-                Glide.with(Geo.this)
-                        .asBitmap()
-                        .load(dbUrlStreer)
-                        .into(new SimpleTarget<Bitmap>() {
-                            @Override
-                            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                                // Convierte la imagen en un arreglo de bytes
-                                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                                resource.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-                                byte[] byteArray = byteArrayOutputStream.toByteArray();
-
-                                // Codifica la imagen en base 64
-                                encodedImageStreerView = Base64.encodeToString(byteArray, Base64.DEFAULT);
-                                Log.d("imageStreer", encodedImageStreerView);
-                            }
-                        });
 
 
                 //send data base MySQL
                 Mysql mysql = new Mysql();
-                mysql.send(Geo.this,country, city, addressLine, ""+ lat, ""+lng, typePharma, classPharma, namePharma, encodedImageMap, encodedImageStreerView, ftp );
+                mysql.send(Geo.this,""+country,
+                        ""+city, ""+addressLine,
+                        ""+ lat, ""+lng,
+                        ""+dbUrlMap,
+                        ""+dbUrlStreer,
+                        ""+typePharma,
+                        ""+ classPharma,
+                        ""+namePharma,
+                        ""+ftp );
             }
         });
 
@@ -207,13 +180,13 @@ public class Geo extends AppCompatActivity {
             String apiKey = "AIzaSyBb3IgM-eU8HwwkzPNpIcpA1BWAdWtdaoI";
             // cargar imagen del mapa con marcador en la ubicación actual
             String urlMap = "https://maps.googleapis.com/maps/api/staticmap?center=" + latitude + "," + longitude +
-                    "&zoom=16&size=1280x720&markers=color:red%7C" + latitude + "," + longitude + "&key=" + apiKey;
+                    "&zoom=16&size=640x480&markers=color:red%7C" + latitude + "," + longitude + "&key=" + apiKey;
 
             Glide.with(this).load(urlMap).into(imageViewMap);
             dbUrlMap = urlMap;
 
             // cargar imagen de la calle en la ubicación actual
-            String urlStreetView = "https://maps.googleapis.com/maps/api/streetview?size=1280x720&location=" + latitude + "," + longitude + "&key=" + apiKey;
+            String urlStreetView = "https://maps.googleapis.com/maps/api/streetview?size=640x480&location=" + latitude + "," + longitude + "&key=" + apiKey;
             dbUrlStreer = urlStreetView;
             Glide.with(this).load(urlStreetView).into(imageViewStreetView);
 

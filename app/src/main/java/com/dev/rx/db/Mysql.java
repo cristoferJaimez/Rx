@@ -23,7 +23,7 @@ public class Mysql {
 
         RequestQueue queue = Volley.newRequestQueue(context);
         Handler handler = new Handler(Looper.getMainLooper());
-        String url = "http://192.168.20.25/Rxapp/save_pharma.php";
+        String url = "http://18.223.43.180/services/save_pharma.php";
 
         Log.d("IMAGESMAP", String.valueOf(imageMap.isEmpty()));
         Log.d("IMAGES", imageStreer);
