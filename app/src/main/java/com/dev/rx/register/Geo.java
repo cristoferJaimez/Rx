@@ -1,6 +1,7 @@
 package com.dev.rx.register;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -9,27 +10,35 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.dev.rx.R;
 import com.dev.rx.R.*;
-import com.dev.rx.db.MongoConnect;
+import com.dev.rx.db.Mysql;
 import com.dev.rx.login.Login;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
@@ -41,12 +50,12 @@ public class Geo extends AppCompatActivity {
     private static final int REQUEST_LOCATION_PERMISSION = 1;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private Location mLastLocation;
-
-    private FusedLocationProviderClient fusedLocationProviderClient;
-    private LocationRequest locationRequest;
-
     private  EditText editTextTextCountry, editTextTextCity, editTextTextCode ,editTextTextLat, editTextTextLng;
     private ImageView imageViewStreetView, imageViewMap;
+    private Spinner spinnerType, spinnerClass, spinnerNamePharma;
+    private String dbUrlMap, dbUrlStreer;
+    private String encodedImageMap, encodedImageStreerView;
+
     @SuppressLint("StringFormatInvalid")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +72,10 @@ public class Geo extends AppCompatActivity {
         editTextTextLng = findViewById(id.editTextTextLng);
         imageViewMap = findViewById(R.id.imagePhotoPre);
         imageViewStreetView = findViewById(R.id.imageLocality);
+        spinnerType = findViewById(id.spinner);
+        spinnerClass = findViewById(id.spinnerTypeCadena);
+        spinnerNamePharma = findViewById(id.spinnerName);
+
         getLocationInfo();
 
 
@@ -83,14 +96,57 @@ public class Geo extends AppCompatActivity {
 
                 String country = editTextTextCountry.getText().toString();
                 String city = editTextTextCity.getText().toString();
-                String code = editTextTextCode.getText().toString();
+                String addressLine = editTextTextCode.getText().toString();
                 String lat = editTextTextLat.getText().toString();
                 String lng = editTextTextLng.getText().toString();
-                Drawable imageStreet = imageViewStreetView.getDrawable();
-                Drawable  imageMap = imageViewMap.getDrawable();
 
-                new MongoConnect();
 
+                String typePharma = spinnerType.getSelectedItem().toString();
+                String classPharma = spinnerClass.getSelectedItem().toString();
+                String namePharma = spinnerNamePharma.getSelectedItem().toString();
+
+                String ftp = "Rx/"+country+"/"+city+"/"+typePharma+"/"+classPharma+"/"+namePharma+"/";
+
+                // Usa Glide para cargar la imagen desde la URL en un ImageView
+                Glide.with(Geo.this)
+                        .asBitmap()
+                        .load(dbUrlMap)
+                        .into(new SimpleTarget<Bitmap>() {
+                                                      @Override
+                            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                // Convierte la imagen en un arreglo de bytes
+                                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                                resource.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+                                byte[] byteArray = byteArrayOutputStream.toByteArray();
+
+                                // Codifica la imagen en base 64
+                                encodedImageMap = Base64.encodeToString(byteArray, Base64.DEFAULT);
+                                Log.d("imageMap", encodedImageMap);
+                            }
+                        });
+
+                // Usa Glide para cargar la imagen desde la URL en un ImageView
+                Glide.with(Geo.this)
+                        .asBitmap()
+                        .load(dbUrlStreer)
+                        .into(new SimpleTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                // Convierte la imagen en un arreglo de bytes
+                                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                                resource.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+                                byte[] byteArray = byteArrayOutputStream.toByteArray();
+
+                                // Codifica la imagen en base 64
+                                encodedImageStreerView = Base64.encodeToString(byteArray, Base64.DEFAULT);
+                                Log.d("imageStreer", encodedImageStreerView);
+                            }
+                        });
+
+
+                //send data base MySQL
+                Mysql mysql = new Mysql();
+                mysql.send(Geo.this,country, city, addressLine, ""+ lat, ""+lng, typePharma, classPharma, namePharma, encodedImageMap, encodedImageStreerView, ftp );
             }
         });
 
@@ -154,10 +210,11 @@ public class Geo extends AppCompatActivity {
                     "&zoom=16&size=1280x720&markers=color:red%7C" + latitude + "," + longitude + "&key=" + apiKey;
 
             Glide.with(this).load(urlMap).into(imageViewMap);
+            dbUrlMap = urlMap;
 
             // cargar imagen de la calle en la ubicación actual
             String urlStreetView = "https://maps.googleapis.com/maps/api/streetview?size=1280x720&location=" + latitude + "," + longitude + "&key=" + apiKey;
-
+            dbUrlStreer = urlStreetView;
             Glide.with(this).load(urlStreetView).into(imageViewStreetView);
 
             try {
@@ -186,6 +243,10 @@ public class Geo extends AppCompatActivity {
                     editTextTextCode.setText(addressLine);
                     editTextTextLat.setText("" + latitude);
                     editTextTextLng.setText("" + longitude);
+
+
+
+
                 }
             } catch (IOException e) {
                 e.printStackTrace();
