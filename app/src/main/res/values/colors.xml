@@ -16,6 +16,7 @@
     <color name="colorSpinnerText">#000000</color>
     <color name="textEditOK">#ABA6D379</color>
     <color name="custom_gray">#838282</color>
+    <color name="custom_btn_camera_circle">#E1EEEBEB</color>
 
     <style name="SpinnerStyle" >
         <item name="android:textColor">@color/colorSpinnerText</item>

@@ -9,8 +9,7 @@
     <ImageView
         android:id="@+id/viewPicture"
         android:layout_width="418dp"
-        android:layout_height="741dp"
-
+        android:layout_height="741dp" android:background="@drawable/my_btn_rect"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,32 +19,25 @@
 
     <ImageButton
         android:id="@+id/btnSave"
-        android:layout_width="135dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="256dp"
-        android:layout_marginTop="21dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="659dp"
-        android:background="@null"
-        app:srcCompat="@drawable/icon_floppy_50x50" />
+        android:background="@drawable/my_btn_rect"
+        android:layout_marginTop="658dp"
+        android:layout_marginEnd="10dp"
+
+        app:srcCompat="@drawable/icon_save_50x50" />
 
     <ImageButton
         android:id="@+id/btnDelete"
-        android:layout_width="135dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="23dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="253dp"
-        android:layout_marginBottom="656dp"
-        android:background="@null"
-        app:srcCompat="@drawable/icon_clear_50x50" />
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="658dp"
+        android:background="@drawable/my_btn_rect"
+        app:srcCompat="@drawable/icon_delete_50x50" />
 
 </RelativeLayout>

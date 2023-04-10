@@ -11,7 +11,7 @@ import androidx.core.content.ContextCompat;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.res.Resources;
+import android.content.SharedPreferences;
 import android.content.res.XmlResourceParser;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -77,11 +77,17 @@ public class Login extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        //Recuperar estado de inicio de sesión
+        SharedPreferences prefs = getSharedPreferences("MisPreferencias", MODE_PRIVATE);
+        boolean estaConectado = prefs.getBoolean("estaConectado", false);
 
-        if (user.isEmpty()) {
+        if (estaConectado == false) {
+            // Realizar la autenticación con el token guardado
             biometricLoginButton.setVisibility(View.INVISIBLE);
+        } else{
+            Intent intent = new Intent(Login.this,ObjectDetectionActivity.class);
+            startActivity(intent);
 
-        }else{
             usernameEditText.setText(user);
             //si no esta registrado ocultar configuracion de huella
             BiometricManager biometricManager = BiometricManager.from(this);
@@ -147,9 +153,6 @@ public class Login extends AppCompatActivity {
             });
         }
 
-
-
-
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -176,7 +179,7 @@ public class Login extends AppCompatActivity {
 
 
 
-                    new Mysql().users(Login.this, username,password);
+                      new Mysql().users(Login.this, username,password);
 
                     //Toast.makeText(getApplicationContext(),
                     //        "Authentication succeeded!", Toast.LENGTH_SHORT).show();
@@ -185,7 +188,6 @@ public class Login extends AppCompatActivity {
                 }
             }
         });
-
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -194,8 +196,5 @@ public class Login extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-
-
     }
 }

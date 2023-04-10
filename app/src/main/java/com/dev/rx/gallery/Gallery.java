@@ -3,7 +3,9 @@ package com.dev.rx.gallery;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
@@ -101,35 +103,45 @@ public class Gallery extends AppCompatActivity {
 
         btnFTP.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                for (String imagePath : imagePaths) {
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            // Subir el archivo al servidor FTP
-                            new FtpUpload(Gallery.this).uploadFileToFTP(imagePath, Gallery.this);
-                            deleteImageFile(imagePath);
+                AlertDialog.Builder builder = new AlertDialog.Builder(Gallery.this);
+                builder.setMessage("¿Desea subir las imágenes seleccionadas al servidor FTP?")
+                        .setPositiveButton("Sí", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                for (String imagePath : imagePaths) {
+                                    new Thread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            // Subir el archivo al servidor FTP
+                                            new FtpUpload(Gallery.this).uploadFileToFTP(imagePath, Gallery.this);
+                                            deleteImageFile(imagePath);
 
-                            // Eliminar la imagen una vez subida al FTP
-                            File file = new File(imagePath);
-                            if (file.delete()) {
-                                // Si se eliminó la imagen, actualizar la vista de la galería
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        imagePaths.remove(imagePath);
-                                        gridView.invalidateViews();
-                                    }
-                                });
+                                            // Eliminar la imagen una vez subida al FTP
+                                            File file = new File(imagePath);
+                                            if (file.delete()) {
+                                                // Si se eliminó la imagen, actualizar la vista de la galería
+                                                runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        imagePaths.remove(imagePath);
+                                                        gridView.invalidateViews();
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    }).start();
+                                }
                             }
-                        }
-                    }).start();
-                }
-
-                //
-
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // Cancelar la acción de subir la imagen
+                                dialog.dismiss();
+                            }
+                        });
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         });
-
 
 
     }

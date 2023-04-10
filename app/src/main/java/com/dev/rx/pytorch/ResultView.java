@@ -13,8 +13,6 @@ import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.dev.rx.pytorch.Result;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -42,15 +40,14 @@ public class ResultView extends View {
         mPaintText = new Paint();
     }
 
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
         if (mResults == null) return;
         for (Result result : mResults) {
-            //System.out.println(result.classIndex);
-            if ( result.classIndex != 4 ) {
-
+            if (result.classIndex != 4) {
                 // Cargar la imagen desde el archivo en assets
                 Bitmap bmp = null;
                 try {
@@ -71,6 +68,10 @@ public class ResultView extends View {
                 // Redimensionar la imagen en proporción
                 Matrix matrix = new Matrix();
                 matrix.postScale(scale, scale);
+
+                // Rotar la imagen redimensionada según el ángulo de rotación del resultado
+                matrix.postRotate(90f, bmp.getWidth() / 2f, bmp.getHeight() / 2f);
+
                 Bitmap scaledBitmap = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);
 
                 // Crear objeto BitmapShader con el objeto Bitmap redimensionado
@@ -78,18 +79,12 @@ public class ResultView extends View {
 
                 // Establecer el objeto BitmapShader como shader del Paint
                 mPaintRectangle.setShader(shader);
-                // Reducir el tamaño de la caja dibujada en un porcentaje
-                //float reductionPercentage = 0.99f; // 20% de reducción
-                //int reducedWidth = (int) (result.rect.width() * (1 - reductionPercentage));
-                //int reducedHeight = (int) (result.rect.height() * (1 - reductionPercentage));
-                //int widthDifference = result.rect.width() - reducedWidth;
-                //int heightDifference = result.rect.height() - reducedHeight;
-                //RectF reducedRect = new RectF(result.rect.left + (widthDifference / 2), result.rect.top + (heightDifference / 2), result.rect.right - (widthDifference / 2), result.rect.bottom - (heightDifference / 2));
 
                 canvas.drawRect(result.rect, mPaintRectangle);
             }
         }
     }
+
 
 
 

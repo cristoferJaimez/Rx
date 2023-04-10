@@ -20,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 import androidx.camera.core.ImageProxy;
 
+import com.dev.rx.config.Config;
 import com.dev.rx.gallery.Gallery;
 import com.dev.rx.R;
 import com.dev.rx.gallery.ViewPicture;
@@ -40,7 +41,7 @@ public class ObjectDetectionActivity extends AbstractCameraXActivity<ObjectDetec
 
     private ResultView mResultView;
 
-    private ImageButton imageButton, galleryButton;
+    private ImageButton imageButton, galleryButton, configButton;
 
     private Bitmap bitmap ;
 
@@ -133,8 +134,6 @@ public class ObjectDetectionActivity extends AbstractCameraXActivity<ObjectDetec
 
         imageButton = findViewById(R.id.btnTakePicture);
         mediaPlayer = MediaPlayer.create(this, R.raw.beep104060);
-
-
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -163,12 +162,19 @@ public class ObjectDetectionActivity extends AbstractCameraXActivity<ObjectDetec
         });
 
         galleryButton = findViewById(R.id.btnGallery);
-
         galleryButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(ObjectDetectionActivity.this, Gallery.class);
+                startActivity(intent);
+            }
+        });
+        configButton = findViewById(R.id.btnConfig);
+        configButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ObjectDetectionActivity.this, Config.class);
                 startActivity(intent);
             }
         });

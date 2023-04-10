@@ -1,10 +1,11 @@
 package com.dev.rx.db;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -15,6 +16,8 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.dev.rx.login.Login;
+import com.dev.rx.pytorch.ObjectDetectionActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -53,8 +56,22 @@ public class Mysql {
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(context, "responde !" + response, Toast.LENGTH_SHORT).show();
-                                Log.e("ResMysql", "" + response);
+                                if (response.equals("true")) {
+                                    Toast.makeText(context, "Farmacia registrada!...", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context, "Ingrese credenciales para iniciar sessión!...", Toast.LENGTH_SHORT).show();
+                                    // Continuar con el proceso de autenticación
+
+                                    Intent intent = new Intent(context, Login.class);
+                                    context.startActivity(intent);
+
+                                } else if(response.equals("false")) {
+                                    Toast.makeText(context, "Fallo el registro!.", Toast.LENGTH_SHORT).show();
+                                    // Pedir al usuario que ingrese sus credenciales nuevamente
+                                }else{
+                                    Toast.makeText(context, "responde !" + response, Toast.LENGTH_SHORT).show();
+                                    Log.e("ResMysql", "" + response);
+                                }
+                                Log.e("ResMysql_", "" + response);
                             }
                         });
                     }
@@ -222,7 +239,23 @@ public class Mysql {
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(context, "responde !" + response, Toast.LENGTH_SHORT).show();
+                                if (response.equals("true")) {
+                                    Toast.makeText(context, "El usuario y la contraseña son válidos", Toast.LENGTH_SHORT).show();
+                                    // Continuar con el proceso de autenticación
+                                    //crear token
+                                    SharedPreferences prefs = context.getSharedPreferences("MisPreferencias", context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = prefs.edit();
+                                    editor.putBoolean("estaConectado", true); //Guarda el estado de inicio de sesión
+                                    editor.apply(); //Guarda los cambios en las preferencias compartidas
+
+
+                                    Intent intent = new Intent(context,ObjectDetectionActivity.class);
+                                    context.startActivity(intent);
+
+                                } else {
+                                    Toast.makeText(context, "El usuario o la contraseña son incorrectos", Toast.LENGTH_SHORT).show();
+                                    // Pedir al usuario que ingrese sus credenciales nuevamente
+                                }
                                 Log.e("ResMysql", "" + response);
                             }
                         });
