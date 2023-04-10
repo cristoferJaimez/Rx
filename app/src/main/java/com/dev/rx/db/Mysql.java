@@ -244,6 +244,7 @@ public class Mysql {
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
                 params.put("user", user);
+                params.put("password", pw);
                 return params;
             }
         };
