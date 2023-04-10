@@ -22,9 +22,6 @@
             android:value="AIzaSyBb3IgM-eU8HwwkzPNpIcpA1BWAdWtdaoI" />
 
         <activity
-            android:name=".register.DataPharma"
-            android:exported="false" />
-        <activity
             android:name=".register.Geo"
             android:configChanges="orientation"
             android:exported="false"

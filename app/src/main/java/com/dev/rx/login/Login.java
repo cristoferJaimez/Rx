@@ -25,6 +25,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.dev.rx.R;
+import com.dev.rx.db.Mysql;
 import com.dev.rx.permissions.Permissions;
 import com.dev.rx.pytorch.ObjectDetectionActivity;
 import com.dev.rx.register.Geo;
@@ -172,10 +173,15 @@ public class Login extends AppCompatActivity {
                     imm.showSoftInput(passwordEditText, InputMethodManager.SHOW_IMPLICIT);
                     return;
                 }else{
-                    Toast.makeText(getApplicationContext(),
-                            "Authentication succeeded!", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(Login.this, ObjectDetectionActivity.class);
-                    startActivity(intent);
+
+
+
+                    new Mysql().users(Login.this, username,password);
+
+                    //Toast.makeText(getApplicationContext(),
+                    //        "Authentication succeeded!", Toast.LENGTH_SHORT).show();
+                    //Intent intent = new Intent(Login.this, ObjectDetectionActivity.class);
+                    //startActivity(intent);
                 }
             }
         });
