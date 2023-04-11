@@ -31,8 +31,8 @@
 
     <ImageButton
         android:id="@+id/btnTakePicture"
-        android:layout_width="118dp"
-        android:layout_height="118dp"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
         android:layout_marginBottom="10sp"
         android:background="@drawable/my_button_selector"
         app:layout_constraintBottom_toBottomOf="@+id/resultView"
@@ -51,8 +51,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="10sp"
-        android:background="@drawable/my_btn_rect"
-
+        android:background="@drawable/my_button_selector"
         android:contentDescription="gallery"
         android:enabled="true"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -66,7 +65,7 @@
         android:layout_width="58dp"
         android:layout_height="58dp"
         android:layout_marginEnd="16dp"
-        android:background="@drawable/my_btn_rect"
+        android:background="@drawable/my_button_selector"
         android:contentDescription="config"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -1,6 +1,7 @@
 package com.dev.rx.pytorch;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -10,11 +11,14 @@ import android.graphics.Rect;
 import android.graphics.YuvImage;
 import android.media.Image;
 import android.media.MediaPlayer;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
@@ -46,6 +50,69 @@ public class ObjectDetectionActivity extends AbstractCameraXActivity<ObjectDetec
     private Bitmap bitmap ;
 
     private MediaPlayer mediaPlayer;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        imageButton = findViewById(R.id.btnTakePicture);
+        mediaPlayer = MediaPlayer.create(this, R.raw.beep104060);
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Save the result image to gallery
+                mediaPlayer.start();
+                Bitmap resultBitmap = mResultView.getResultBitmap();
+                if (resultBitmap != null) {
+                    Bitmap resizedResultBitmap = Bitmap.createScaledBitmap(resultBitmap, bitmap.getWidth(), bitmap.getHeight(), true);
+                    Bitmap mixedBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), bitmap.getConfig());
+                    Canvas canvas = new Canvas(mixedBitmap);
+                    canvas.drawBitmap(bitmap, new Matrix(), null);
+                    canvas.drawBitmap(resizedResultBitmap, new Matrix(), null);
+
+                    //vista previa
+                    // Reducir la calidad de la imagen
+                    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                    mixedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream); // 50 es el nivel de calidad, puedes ajustarlo según tus necesidades
+                    byte[] byteArray = outputStream.toByteArray();
+
+
+                    final Intent intent = new Intent(ObjectDetectionActivity.this, ViewPicture.class);
+                    intent.putExtra("mixedBitmap", byteArray);
+                    // Inicia la actividad ViewPicture
+                    startActivity(intent);
+                    //saveImageToGallery(mixedBitmap);
+
+
+                }
+            }
+        });
+        galleryButton = findViewById(R.id.btnGallery);
+        galleryButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ObjectDetectionActivity.this, Gallery.class);
+                startActivity(intent);
+            }
+        });
+        configButton = findViewById(R.id.btnConfig);
+        configButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Código que se ejecutará en el hilo secundario
+                        Intent intent = new Intent(ObjectDetectionActivity.this, Config.class);
+                        startActivity(intent);
+                    }
+                });
+                thread.start();
+            }
+        });
+    }
+
 
     static class AnalysisResult {
         private final ArrayList<Result> mResults;
@@ -103,6 +170,7 @@ public class ObjectDetectionActivity extends AbstractCameraXActivity<ObjectDetec
     @WorkerThread
     @Nullable
     protected AnalysisResult analyzeImage(ImageProxy image, int rotationDegrees) {
+
         try {
             if (mModule == null) {
                 mModule = LiteModuleLoader.load(MainActivity.assetFilePath(getApplicationContext(), "best.torchscript_opt.ptl"));
@@ -128,59 +196,6 @@ public class ObjectDetectionActivity extends AbstractCameraXActivity<ObjectDetec
         float ivScaleY = (float)mResultView.getHeight() / bitmap.getHeight();
 
         final ArrayList<Result> results = PrePostProcessor.outputsToNMSPredictions(outputs, imgScaleX, imgScaleY, ivScaleX, ivScaleY, 0, 0);
-
-
-
-
-        imageButton = findViewById(R.id.btnTakePicture);
-        mediaPlayer = MediaPlayer.create(this, R.raw.beep104060);
-        imageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Save the result image to gallery
-                mediaPlayer.start();
-                Bitmap resultBitmap = mResultView.getResultBitmap();
-                if (resultBitmap != null) {
-                    Bitmap resizedResultBitmap = Bitmap.createScaledBitmap(resultBitmap, bitmap.getWidth(), bitmap.getHeight(), true);
-                    Bitmap mixedBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), bitmap.getConfig());
-                    Canvas canvas = new Canvas(mixedBitmap);
-                    canvas.drawBitmap(bitmap, new Matrix(), null);
-                    canvas.drawBitmap(resizedResultBitmap, new Matrix(), null);
-
-                    //vista previa
-                    // Reducir la calidad de la imagen
-                    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                    mixedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream); // 50 es el nivel de calidad, puedes ajustarlo según tus necesidades
-                    byte[] byteArray = outputStream.toByteArray();
-                    final Intent intent = new Intent(ObjectDetectionActivity.this, ViewPicture.class);
-                    intent.putExtra("mixedBitmap", byteArray);
-                    // Inicia la actividad ViewPicture
-                    startActivity(intent);
-                    //saveImageToGallery(mixedBitmap);
-                }
-            }
-        });
-
-        galleryButton = findViewById(R.id.btnGallery);
-        galleryButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(ObjectDetectionActivity.this, Gallery.class);
-                startActivity(intent);
-            }
-        });
-        configButton = findViewById(R.id.btnConfig);
-        configButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(ObjectDetectionActivity.this, Config.class);
-                startActivity(intent);
-            }
-        });
-
-
-
 
 
 

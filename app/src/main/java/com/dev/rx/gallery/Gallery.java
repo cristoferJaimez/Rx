@@ -23,6 +23,7 @@ import com.dev.rx.pytorch.ObjectDetectionActivity;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Gallery extends AppCompatActivity {
@@ -56,6 +57,9 @@ public class Gallery extends AppCompatActivity {
             }
         }
 
+        // Ordenar la lista de forma decreciente
+        Collections.sort(imagePaths, Collections.reverseOrder());
+
         // Crear un adaptador para el GridView
         ImageAdapter adapter = new ImageAdapter(Gallery.this, imagePaths);
         gridView.setAdapter(adapter);
@@ -70,28 +74,6 @@ public class Gallery extends AppCompatActivity {
             intent.putExtra("imagePath", imagePath);
             startActivity(intent);
         });
-
-
-
-        // En el método onCreate
-        /*
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String imagePath = imagePaths.get(position);
-
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        // Subir el archivo al servidor FTP
-                        new FtpUpload(Gallery.this).uploadFileToFTP(imagePath, Gallery.this);
-                        //uploadFileToFTP(imagePath);
-                    }
-                }).start();
-            }
-        });
-        */
-
 
         // botones funcionalidad
         btnBackCamera.setOnClickListener(new View.OnClickListener() {
@@ -130,6 +112,7 @@ public class Gallery extends AppCompatActivity {
                                         }
                                     }).start();
                                 }
+
                             }
                         })
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -141,6 +124,7 @@ public class Gallery extends AppCompatActivity {
                 AlertDialog dialog = builder.create();
                 dialog.show();
             }
+
         });
 
 
@@ -195,4 +179,7 @@ public class Gallery extends AppCompatActivity {
             file.delete();
         }
     }
+
+
+
 }

@@ -18,6 +18,8 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".config.Config"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
             android:exported="false" />
 
         <meta-data

@@ -25,24 +25,24 @@
 
     <ImageButton
         android:id="@+id/btnFTP"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_below="@+id/gridView"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
-        android:background="@drawable/my_btn_rect"
-        app:srcCompat="@drawable/icon_ftp_50x50" />
+        android:background="@drawable/my_button_selector"
+        app:srcCompat="@drawable/icon_ftp_30x30" />
 
     <ImageButton
         android:id="@+id/btnBackCamera"
-        android:layout_width="wrap_content"
-        android:layout_height="52dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_below="@+id/gridView"
         android:layout_alignParentStart="true"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/my_btn_rect"
-        app:srcCompat="@drawable/icon_back_50x50" />
+        android:layout_marginTop="8dp"
+        android:background="@drawable/my_button_selector"
+        app:srcCompat="@drawable/icon_back_30x30" />
 
 </RelativeLayout>

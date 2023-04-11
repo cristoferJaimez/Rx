@@ -7,6 +7,7 @@ import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.icu.text.SimpleDateFormat;
@@ -58,64 +59,73 @@ public class ViewPicture extends AppCompatActivity {
         // Convertir el array de bytes en un objeto Bitmap
         Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
 
-        // Obtener una referencia al ImageView
-        imageView = findViewById(R.id.viewPicture);
-
-        // Mostrar la imagen en el ImageView
-        imageView.setImageBitmap(bitmap);
-
-        btnDelete = findViewById(R.id.btnDelete);
-        btnSave = findViewById(R.id.btnSave);
-        //btn save and delete
-
-        btnDelete.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                // Crear un diálogo de alerta para confirmar la eliminación
-                AlertDialog.Builder builder = new AlertDialog.Builder(ViewPicture.this);
-                builder.setTitle("Confirmación");
-                builder.setMessage("¿Está seguro de que desea eliminar esta imagen?");
-                builder.setPositiveButton("Sí", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        // Si el usuario confirma la eliminación, inicia la actividad ObjectDetectionActivity
-                        Intent intent = new Intent(ViewPicture.this, ObjectDetectionActivity.class);
-                        startActivity(intent);
-                    }
-                });
-                builder.setNegativeButton("No", null);
-                builder.show();
-            }
-        });
 
 
-        //save
-        //save
-        btnSave.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View view) {
-                // Crear un diálogo de alerta para confirmar la guardado
-                AlertDialog.Builder builder = new AlertDialog.Builder(ViewPicture.this);
-                builder.setTitle("Confirmación");
-                builder.setMessage("¿Está seguro de que desea guardar esta imagen?");
-                builder.setPositiveButton("Sí", new DialogInterface.OnClickListener() {
+        SharedPreferences prefs = getSharedPreferences("myPrefs", MODE_PRIVATE);
+        boolean switchState = prefs.getBoolean("switch1_state", false);
+        //Toast.makeText(getApplicationContext(), "Mensaje a mostrar " + switchState, Toast.LENGTH_SHORT).show();
 
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        // Si el usuario confirma el guardado, guarda la imagen en la galería
-                        saveImageToGallery(bitmap);
-                        // Cierra la actividad actual y vuelve a la actividad anterior
-                        finish();
-                    }
-                });
-                builder.setNegativeButton("No", null);
-                builder.show();
-            }
-        });
+        if(switchState == true) {
+
+            // Obtener una referencia al ImageView
+            imageView = findViewById(R.id.viewPicture);
+
+            // Mostrar la imagen en el ImageView
+            imageView.setImageBitmap(bitmap);
+
+            btnDelete = findViewById(R.id.btnDelete);
+            btnSave = findViewById(R.id.btnSave);
 
 
+            //btn save and delete
+            btnDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // Crear un diálogo de alerta para confirmar la eliminación
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ViewPicture.this);
+                    builder.setTitle("Confirmación");
+                    builder.setMessage("¿Está seguro de que desea eliminar esta imagen?");
+                    builder.setPositiveButton("Sí", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            // Si el usuario confirma la eliminación, inicia la actividad ObjectDetectionActivity
+                            Intent intent = new Intent(ViewPicture.this, ObjectDetectionActivity.class);
+                            startActivity(intent);
+                        }
+                    });
+                    builder.setNegativeButton("No", null);
+                    builder.show();
+                }
+            });
+            //save
+            btnSave.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View view) {
+                    // Crear un diálogo de alerta para confirmar la guardado
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ViewPicture.this);
+                    builder.setTitle("Confirmación");
+                    builder.setMessage("¿Está seguro de que desea guardar esta imagen?");
+                    builder.setPositiveButton("Sí", new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            // Si el usuario confirma el guardado, guarda la imagen en la galería
+                            saveImageToGallery(bitmap);
+                            // Cierra la actividad actual y vuelve a la actividad anterior
+                            finish();
+                        }
+                    });
+                    builder.setNegativeButton("No", null);
+                    builder.show();
+                }
+            });
+
+        }else{
+            saveImageToGallery(bitmap);
+            finish();
+        }
 
     }
 

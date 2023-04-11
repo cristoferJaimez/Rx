@@ -19,25 +19,24 @@
 
     <ImageButton
         android:id="@+id/btnSave"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:background="@drawable/my_btn_rect"
+        android:background="@drawable/my_button_selector"
         android:layout_marginTop="658dp"
         android:layout_marginEnd="10dp"
-
-        app:srcCompat="@drawable/icon_save_50x50" />
+        app:srcCompat="@drawable/icon_save_30x30" />
 
     <ImageButton
         android:id="@+id/btnDelete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="10dp"
         android:layout_marginTop="658dp"
-        android:background="@drawable/my_btn_rect"
-        app:srcCompat="@drawable/icon_delete_50x50" />
+        android:background="@drawable/my_button_selector"
+        app:srcCompat="@drawable/icon_delete_30x30" />
 
 </RelativeLayout>

@@ -115,6 +115,7 @@ public class Mysql {
         void onSuccess(List<String> result);
     }
 
+    //llenar campos autocomplete
     public void selectOne(Context context,
                           VolleyCallback callback) {
         String url = "http://18.223.43.180/services/select_type_pharma.php";
@@ -221,7 +222,7 @@ public class Mysql {
     }
 
 
-
+    // validar usuario
     public void users(Context context,
                      String user,
                      String pw
@@ -248,6 +249,8 @@ public class Mysql {
                                     editor.putBoolean("estaConectado", true); //Guarda el estado de inicio de sesión
                                     editor.apply(); //Guarda los cambios en las preferencias compartidas
 
+                                    //guardar en cache id de usuario
+                                    //getFkPharma(context, user);
 
                                     Intent intent = new Intent(context,ObjectDetectionActivity.class);
                                     context.startActivity(intent);
@@ -286,6 +289,60 @@ public class Mysql {
 
     }
 
+
+    // optenr id de usuario
+    public void getFkPharma(Context context, String user) {
+        RequestQueue queue = Volley.newRequestQueue(context);
+        Handler handler = new Handler(Looper.getMainLooper());
+        String url = "http://18.223.43.180/services/id_user.php";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    JSONObject jsonObject = new JSONObject(response);
+                                    int fkPharma = jsonObject.getInt("fk_pharma");
+                                    SharedPreferences prefs = context.getSharedPreferences("myPrefs", context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = prefs.edit();
+                                    editor.putInt("fkPharma", fkPharma);
+                                    editor.apply();
+
+
+                                    // Hacer lo que quieras con el valor de fk_pharma
+                                    Log.d("ResMysql", "Valor de fk_pharma: " + fkPharma);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(context, "error! al enviar información. " + error, Toast.LENGTH_SHORT).show();
+                                Log.e("ErrMysql", "" + error);
+                            }
+                        });
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("user", user);
+                return params;
+            }
+        };
+
+        queue.add(stringRequest);
+    }
 
 }
 
