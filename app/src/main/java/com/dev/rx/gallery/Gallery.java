@@ -7,14 +7,19 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.dev.rx.R;
@@ -31,7 +36,10 @@ public class Gallery extends AppCompatActivity {
     private GridView gridView;
     private List<String> imagePaths = new ArrayList<>();
 
-    private ImageButton btnBackCamera, btnFTP;
+    private ImageButton btnBackCamera, btnFTP, btnDelete;
+
+    private List<Integer> selectedPositions = new ArrayList<>();
+
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -42,8 +50,11 @@ public class Gallery extends AppCompatActivity {
         gridView = findViewById(R.id.gridView);
         btnBackCamera = findViewById(R.id.btnBackCamera);
         btnFTP = findViewById(R.id.btnFTP);
+        btnDelete = findViewById(R.id.btnDelete);
 
-
+        //obtener parametro auto subida al ftp
+        SharedPreferences prefs = getSharedPreferences("myPrefs", MODE_PRIVATE);
+        boolean switchState = prefs.getBoolean("switch2_state", false);
 
 
 
@@ -57,6 +68,11 @@ public class Gallery extends AppCompatActivity {
             }
         }
 
+        TextView textView = findViewById(R.id.numeroRx); // Reemplaza "text_view_id" con el ID de tu TextView
+        int numFotos = imagePaths.size();
+        String texto = "Número de Rx: " + numFotos;
+        textView.setText(texto);
+
         // Ordenar la lista de forma decreciente
         Collections.sort(imagePaths, Collections.reverseOrder());
 
@@ -64,6 +80,33 @@ public class Gallery extends AppCompatActivity {
         ImageAdapter adapter = new ImageAdapter(Gallery.this, imagePaths);
         gridView.setAdapter(adapter);
 
+
+
+
+        btnDelete.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(Gallery.this);
+            builder.setMessage("¿Está seguro de que desea eliminar las imágenes seleccionadas?")
+                    .setPositiveButton("Sí", (dialog, id) -> {
+                        // Eliminar los elementos seleccionados
+                        Collections.sort(selectedPositions, Collections.reverseOrder());
+                        for (int position : selectedPositions) {
+                            String imagePath = imagePaths.get(position);
+                            deleteImageFile(imagePath);
+                            imagePaths.remove(position);
+                        }
+                        int newText = imagePaths.size();
+                        textView.setText("Número de Rx: "+newText);
+                        selectedPositions.clear();
+                        gridView.invalidateViews();
+                        btnDelete.setVisibility(View.GONE);
+                    })
+                    .setNegativeButton("No", (dialog, id) -> {
+                        // Cancelar la eliminación de los elementos seleccionados
+                        dialog.dismiss();
+                    });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        });
 
         gridView.setOnItemClickListener((parent, view, position, id) -> {
             // Obtener la ruta de la imagen seleccionada
@@ -74,6 +117,37 @@ public class Gallery extends AppCompatActivity {
             intent.putExtra("imagePath", imagePath);
             startActivity(intent);
         });
+
+        gridView.setOnItemLongClickListener((parent, view, position, id) -> {
+            if (selectedPositions.contains(position)) {
+                // Si el elemento ya está seleccionado, lo deseleccionamos y lo marcamos como no seleccionado
+                selectedPositions.remove(Integer.valueOf(position));
+                view.setBackgroundResource(0);
+                // Recuperar imagen original del view y establecerla
+                if (view.getTag() != null) {
+                    Drawable originalImage = (Drawable) view.getTag();
+                    ((ImageView) view).setImageDrawable(originalImage);
+                    view.setTag(null);
+                }
+            } else {
+                // Si el elemento no está seleccionado, lo seleccionamos y lo marcamos como seleccionado
+                selectedPositions.add(position);
+                // Guardar imagen original del view
+                view.setTag(((ImageView) view).getDrawable());
+                ((ImageView) view).setImageResource(R.drawable.selected_item_border);
+            }
+
+            // Mostrar el botón de eliminar si hay elementos seleccionados, ocultarlo de lo contrario
+            if (selectedPositions.isEmpty()) {
+                btnDelete.setVisibility(View.GONE);
+            } else {
+                btnDelete.setVisibility(View.VISIBLE);
+            }
+            return true;
+        });
+
+
+
 
         // botones funcionalidad
         btnBackCamera.setOnClickListener(new View.OnClickListener() {
@@ -95,20 +169,22 @@ public class Gallery extends AppCompatActivity {
                                         public void run() {
                                             // Subir el archivo al servidor FTP
                                             new FtpUpload(Gallery.this).uploadFileToFTP(imagePath, Gallery.this);
-                                            deleteImageFile(imagePath);
 
                                             // Eliminar la imagen una vez subida al FTP
-                                            File file = new File(imagePath);
-                                            if (file.delete()) {
-                                                // Si se eliminó la imagen, actualizar la vista de la galería
-                                                runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        imagePaths.remove(imagePath);
-                                                        gridView.invalidateViews();
-                                                    }
-                                                });
-                                            }
+                                            deleteImageFile(imagePath);
+
+
+                                            // Eliminar la ruta de la imagen de la lista de rutas
+                                            imagePaths.remove(imagePath);
+
+                                            // Actualizar la vista de la galería
+
+                                            runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    gridView.invalidateViews();
+                                                }
+                                            });
                                         }
                                     }).start();
                                 }
@@ -123,11 +199,10 @@ public class Gallery extends AppCompatActivity {
                         });
                 AlertDialog dialog = builder.create();
                 dialog.show();
+
             }
 
         });
-
-
     }
 
     private static class ImageAdapter extends BaseAdapter {
@@ -139,22 +214,18 @@ public class Gallery extends AppCompatActivity {
             this.context = context;
             this.imagePaths = imagePaths;
         }
-
         @Override
         public int getCount() {
             return imagePaths.size();
         }
-
         @Override
         public Object getItem(int position) {
             return imagePaths.get(position);
         }
-
         @Override
         public long getItemId(int position) {
             return position;
         }
-
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             ImageView imageView;
@@ -166,20 +237,22 @@ public class Gallery extends AppCompatActivity {
                 imageView = (ImageView) convertView;
             }
 
-            String imagePath = imagePaths.get(position);
-            Glide.with(context).load(imagePath).into(imageView);
+            // Verificar si la lista tiene elementos y si la posición está dentro de los límites
+            if (imagePaths != null && position >= 0 && position < imagePaths.size()) {
+                String imagePath = imagePaths.get(position);
+                Glide.with(context).load(imagePath).into(imageView);
+            }
 
             return imageView;
         }
+
     }
 
-    private void deleteImageFile(String imagePath) {
+    public void deleteImageFile(String imagePath) {
         File file = new File(imagePath);
         if (file.exists()) {
             file.delete();
-        }
+                  }
     }
-
-
 
 }

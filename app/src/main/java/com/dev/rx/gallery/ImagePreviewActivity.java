@@ -1,26 +1,36 @@
 package com.dev.rx.gallery;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import com.bumptech.glide.Glide;
 import com.dev.rx.R;
+import com.github.chrisbanes.photoview.PhotoView;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 public class ImagePreviewActivity extends AppCompatActivity {
 
     // Declarar variables para ImageView y botones
-    private ImageView imageView;
-    private ImageButton closeButton, deleteButton, rotateButton;
+    private PhotoView photoView;
     private String imagePath;
+    private ImageButton closeButton, deleteButton, rotateButton;
+
     private int currentRotation = 0;
 
     @SuppressLint("MissingInflatedId")
@@ -33,10 +43,10 @@ public class ImagePreviewActivity extends AppCompatActivity {
         imagePath = getIntent().getStringExtra("imagePath");
 
         // Obtener una referencia al ImageView
-        imageView = findViewById(R.id.preView);
+        photoView = findViewById(R.id.preView);
 
-        // Cargar la imagen en el ImageView
-        Glide.with(this).load(imagePath).into(imageView);
+        // Cargar la imagen en el PhotoView
+        Glide.with(this).load(imagePath).into(photoView);
 
         // Obtener referencias a los botones
         closeButton = findViewById(R.id.btnClose);
@@ -55,11 +65,23 @@ public class ImagePreviewActivity extends AppCompatActivity {
         deleteButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Eliminar la imagen
-                deleteImage();
 
-                // Establecer el resultado de la actividad y finalizarla
-                setResult(RESULT_OK);
-                finish();
+                AlertDialog.Builder builder = new AlertDialog.Builder(ImagePreviewActivity.this);
+                builder.setTitle("Confirmar eliminación");
+                builder.setMessage("¿Está seguro de que desea eliminar esta imagen?");
+                builder.setPositiveButton("Sí", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // Eliminar la imagen
+                        new Gallery().deleteImageFile(imagePath);
+                        // Establecer el resultado de la actividad y finalizarla
+                        setResult(RESULT_OK);
+                        finish();
+                    }
+                });
+                builder.setNegativeButton("No", null);
+                builder.show();
+
             }
         });
 
@@ -82,16 +104,14 @@ public class ImagePreviewActivity extends AppCompatActivity {
     private void rotateImage(int angle) {
         Glide.with(this).load(imagePath)
                 .transform(new RotateTransformation(this, angle))
-                .into(imageView);
+                .into(photoView);
     }
 
-    // Función para eliminar la imagen
-    private void deleteImage() {
-        File file = new File(imagePath);
-        if (file.exists()) {
-            file.delete();
-            // Actualizar la galería de imágenes para que la imagen eliminada desaparezca de la lista
-            sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)));
-        }
-    }
+
+
+
+
+
+
+
 }

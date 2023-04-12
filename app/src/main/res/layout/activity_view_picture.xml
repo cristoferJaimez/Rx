@@ -6,10 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".gallery.ViewPicture">
 
-    <ImageView
+    <com.github.chrisbanes.photoview.PhotoView
         android:id="@+id/viewPicture"
-        android:layout_width="418dp"
-        android:layout_height="741dp" android:background="@drawable/my_btn_rect"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/my_btn_rect"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

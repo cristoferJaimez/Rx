@@ -1,14 +1,19 @@
 package com.dev.rx.pytorch;
 
+import static android.graphics.Color.GREEN;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.ImageFormat;
 import android.graphics.Matrix;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.YuvImage;
+import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
@@ -18,11 +23,13 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.ImageButton;
-import android.widget.Toast;
+import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 import androidx.camera.core.ImageProxy;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.dev.rx.config.Config;
 import com.dev.rx.gallery.Gallery;
@@ -57,6 +64,31 @@ public class ObjectDetectionActivity extends AbstractCameraXActivity<ObjectDetec
         super.onCreate(savedInstanceState);
         imageButton = findViewById(R.id.btnTakePicture);
         mediaPlayer = MediaPlayer.create(this, R.raw.beep104060);
+
+        //images front notifications
+        ImageView imageView = findViewById(R.id.imageViewFront);
+        ImageView imageFtp = findViewById(R.id.imageFTPFront);
+        ImageView imageEncryt = findViewById(R.id.imageEncrytFront);
+
+        SharedPreferences prefs = getSharedPreferences("myPrefs", MODE_PRIVATE);
+        boolean switchState1 = prefs.getBoolean("switch1_state", false);
+        boolean switchState2 = prefs.getBoolean("switch2_state", false);
+        boolean switchState3 = prefs.getBoolean("switch3_state", false);
+
+        if(switchState1 == true) {
+           // Establece el Drawable en la ImageView
+            imageView.setBackgroundColor(GREEN);
+        }
+        if(switchState2 == true) {
+           // Establece el Drawable en la ImageView
+            imageFtp.setBackgroundColor(GREEN);
+        }
+        if(switchState3 == true) {
+            // Establece el Drawable en la ImageView
+            imageEncryt.setBackgroundColor(GREEN);
+        }
+
+
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -64,27 +96,31 @@ public class ObjectDetectionActivity extends AbstractCameraXActivity<ObjectDetec
                 mediaPlayer.start();
                 Bitmap resultBitmap = mResultView.getResultBitmap();
                 if (resultBitmap != null) {
-                    Bitmap resizedResultBitmap = Bitmap.createScaledBitmap(resultBitmap, bitmap.getWidth(), bitmap.getHeight(), true);
-                    Bitmap mixedBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), bitmap.getConfig());
-                    Canvas canvas = new Canvas(mixedBitmap);
-                    canvas.drawBitmap(bitmap, new Matrix(), null);
-                    canvas.drawBitmap(resizedResultBitmap, new Matrix(), null);
+                    try {
+                        Bitmap resizedResultBitmap = Bitmap.createScaledBitmap(resultBitmap, bitmap.getWidth(), bitmap.getHeight(), true);
+                        Bitmap mixedBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), bitmap.getConfig());
+                        Canvas canvas = new Canvas(mixedBitmap);
+                        canvas.drawBitmap(bitmap, new Matrix(), null);
+                        canvas.drawBitmap(resizedResultBitmap, new Matrix(), null);
 
-                    //vista previa
-                    // Reducir la calidad de la imagen
-                    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                    mixedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream); // 50 es el nivel de calidad, puedes ajustarlo según tus necesidades
-                    byte[] byteArray = outputStream.toByteArray();
-
-
-                    final Intent intent = new Intent(ObjectDetectionActivity.this, ViewPicture.class);
-                    intent.putExtra("mixedBitmap", byteArray);
-                    // Inicia la actividad ViewPicture
-                    startActivity(intent);
-                    //saveImageToGallery(mixedBitmap);
+                        //vista previa
+                        // Reducir la calidad de la imagen
+                        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                        mixedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream); // 50 es el nivel de calidad, puedes ajustarlo según tus necesidades
+                        byte[] byteArray = outputStream.toByteArray();
 
 
+                        final Intent intent = new Intent(ObjectDetectionActivity.this, ViewPicture.class);
+                        intent.putExtra("mixedBitmap", byteArray);
+                        // Inicia la actividad ViewPicture
+                        startActivity(intent);
+
+                    } catch (NullPointerException e) {
+                        // Handle the case where a NullPointerException is thrown
+                        e.printStackTrace();
+                    }
                 }
+
             }
         });
         galleryButton = findViewById(R.id.btnGallery);

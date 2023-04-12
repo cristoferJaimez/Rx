@@ -109,9 +109,10 @@
             android:layout_height="50dp"
             android:layout_below="@+id/switch3"
             android:layout_alignParentStart="true"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="37dp"
-            android:layout_marginEnd="170dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="145dp"
+            android:layout_marginTop="41dp"
+            android:layout_marginEnd="145dp"
             android:layout_marginBottom="3dp"
             android:background="@drawable/my_button_selector"
             app:srcCompat="@drawable/icon_back_30x30" />

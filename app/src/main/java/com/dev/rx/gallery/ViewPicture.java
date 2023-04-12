@@ -22,7 +22,9 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.dev.rx.R;
+import com.dev.rx.ftp.FtpAuto;
 import com.dev.rx.pytorch.ObjectDetectionActivity;
+import com.github.chrisbanes.photoview.PhotoView;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -42,12 +44,11 @@ public class ViewPicture extends AppCompatActivity {
     }
 
 
-
-
-
-    private ImageView imageView;
+    private PhotoView imageView;
     private ImageButton btnSave, btnDelete;
-    @SuppressLint("MissingInflatedId")
+
+    private     boolean switchState, switchState2;
+    @SuppressLint({"MissingInflatedId", "WrongViewCast"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,13 +61,13 @@ public class ViewPicture extends AppCompatActivity {
         Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
 
 
-
-
         SharedPreferences prefs = getSharedPreferences("myPrefs", MODE_PRIVATE);
-        boolean switchState = prefs.getBoolean("switch1_state", false);
+        switchState = prefs.getBoolean("switch1_state", false);
+        switchState2 = prefs.getBoolean("switch2_state", false);
         //Toast.makeText(getApplicationContext(), "Mensaje a mostrar " + switchState, Toast.LENGTH_SHORT).show();
 
-        if(switchState == true) {
+
+        if (switchState == true) {
 
             // Obtener una referencia al ImageView
             imageView = findViewById(R.id.viewPicture);
@@ -77,6 +78,9 @@ public class ViewPicture extends AppCompatActivity {
             btnDelete = findViewById(R.id.btnDelete);
             btnSave = findViewById(R.id.btnSave);
 
+            //saveImageToGallery(mixedBitmap);
+            SharedPreferences prefs2 = getSharedPreferences("myPrefs", MODE_PRIVATE);
+            switchState2 = prefs2.getBoolean("switch2_state", false);
 
             //btn save and delete
             btnDelete.setOnClickListener(new View.OnClickListener() {
@@ -114,6 +118,9 @@ public class ViewPicture extends AppCompatActivity {
                             // Si el usuario confirma el guardado, guarda la imagen en la galería
                             saveImageToGallery(bitmap);
                             // Cierra la actividad actual y vuelve a la actividad anterior
+                            if (switchState2 == true) {
+                                new FtpAuto().ftpAuto(ViewPicture.this);
+                            }
                             finish();
                         }
                     });
@@ -122,9 +129,14 @@ public class ViewPicture extends AppCompatActivity {
                 }
             });
 
-        }else{
+        } else {
             saveImageToGallery(bitmap);
             finish();
+        }
+
+
+        if (switchState2 == true) {
+            new FtpAuto().ftpAuto(ViewPicture.this);
         }
 
     }

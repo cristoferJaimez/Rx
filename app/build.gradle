@@ -69,6 +69,8 @@ dependencies {
 
     //spinner search
     implementation 'com.gitee.chinasoft_ohos:SearchableSpinner:1.0.0'
+    //zoom image
+    implementation 'com.github.chrisbanes:PhotoView:2.3.0'
 
 
 }
