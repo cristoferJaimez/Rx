@@ -32,15 +32,10 @@ import java.util.Collections;
 import java.util.List;
 
 public class Gallery extends AppCompatActivity {
-
     private GridView gridView;
     private List<String> imagePaths = new ArrayList<>();
-
     private ImageButton btnBackCamera, btnFTP, btnDelete;
-
     private List<Integer> selectedPositions = new ArrayList<>();
-
-
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,9 +51,6 @@ public class Gallery extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("myPrefs", MODE_PRIVATE);
         boolean switchState = prefs.getBoolean("switch2_state", false);
 
-
-
-
         // Obtener las rutas de las imágenes
         File directory = new File(Environment.getExternalStorageDirectory() + "/Pictures/");
         File[] files = directory.listFiles();
@@ -72,16 +64,11 @@ public class Gallery extends AppCompatActivity {
         int numFotos = imagePaths.size();
         String texto = "Número de Rx: " + numFotos;
         textView.setText(texto);
-
         // Ordenar la lista de forma decreciente
         Collections.sort(imagePaths, Collections.reverseOrder());
-
         // Crear un adaptador para el GridView
         ImageAdapter adapter = new ImageAdapter(Gallery.this, imagePaths);
         gridView.setAdapter(adapter);
-
-
-
 
         btnDelete.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(Gallery.this);
@@ -111,7 +98,6 @@ public class Gallery extends AppCompatActivity {
         gridView.setOnItemClickListener((parent, view, position, id) -> {
             // Obtener la ruta de la imagen seleccionada
             String imagePath = imagePaths.get(position);
-
             // Crear un intent para abrir la vista previa
             Intent intent = new Intent(this, ImagePreviewActivity.class);
             intent.putExtra("imagePath", imagePath);
@@ -145,10 +131,6 @@ public class Gallery extends AppCompatActivity {
             }
             return true;
         });
-
-
-
-
         // botones funcionalidad
         btnBackCamera.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -156,7 +138,6 @@ public class Gallery extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
         btnFTP.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(Gallery.this);
@@ -204,7 +185,6 @@ public class Gallery extends AppCompatActivity {
 
         });
     }
-
     private static class ImageAdapter extends BaseAdapter {
 
         private final Context context;
@@ -247,12 +227,10 @@ public class Gallery extends AppCompatActivity {
         }
 
     }
-
     public void deleteImageFile(String imagePath) {
         File file = new File(imagePath);
         if (file.exists()) {
             file.delete();
                   }
     }
-
 }
