@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.dev.rx.R;
+import com.dev.rx.pytorch.ObjectDetectionActivity;
 import com.github.chrisbanes.photoview.PhotoView;
 
 import java.io.File;
@@ -74,6 +75,9 @@ public class ImagePreviewActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         // Eliminar la imagen
                         new Gallery().deleteImageFile(imagePath);
+                        // Volver a cargar la actividad Gallery
+                        Intent intent = new Intent(ImagePreviewActivity.this, Gallery.class);
+                        startActivity(intent);
                         // Establecer el resultado de la actividad y finalizarla
                         setResult(RESULT_OK);
                         finish();
@@ -106,12 +110,6 @@ public class ImagePreviewActivity extends AppCompatActivity {
                 .transform(new RotateTransformation(this, angle))
                 .into(photoView);
     }
-
-
-
-
-
-
 
 
 }

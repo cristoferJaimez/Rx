@@ -4,5 +4,5 @@
     <stroke
         android:width="4dp"
         android:color="@android:color/black" />
-    <solid android:color="?attr/colorControlHighlight" />
+    <solid android:color="@color/custom_btn_camera_circle" />
 </shape>

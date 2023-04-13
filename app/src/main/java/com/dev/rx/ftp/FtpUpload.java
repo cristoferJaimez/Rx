@@ -47,10 +47,10 @@ public class FtpUpload {
             FileInputStream inputStream = new FileInputStream(new File(filePath));
 
             // Subir el archivo al servidor FTP
-            ftpClient.storeFile("Rx_"+name, inputStream);
+            ftpClient.storeFile(name, inputStream);
             // Mostrar un Toast en el hilo principal de la aplicación
             Activity activity = (Activity) mContext;
-            String finalName = "Rx_"+name;
+            String finalName = name;
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

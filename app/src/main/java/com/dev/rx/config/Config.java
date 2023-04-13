@@ -71,7 +71,7 @@ public class Config extends AppCompatActivity {
         switch3 = findViewById(R.id.switch3);
 
         // Obtener los estados guardados de los Switches en SharedPreferences
-        boolean switch1State = prefs.getBoolean("switch1_state", true);
+        boolean switch1State = prefs.getBoolean("switch1_state", false);
         boolean switch2State = prefs.getBoolean("switch2_state", false);
         boolean switch3State = prefs.getBoolean("switch3_state", false);
 
