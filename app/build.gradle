@@ -72,6 +72,8 @@ dependencies {
     //zoom image
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
 
+    //tutorial
+    implementation 'com.getkeepsafe.taptargetview:taptargetview:1.13.3'
 
 }
 

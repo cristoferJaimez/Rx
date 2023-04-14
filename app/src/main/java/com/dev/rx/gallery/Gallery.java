@@ -307,7 +307,7 @@ public class Gallery extends AppCompatActivity {
                 String fileName = new File(imagePath).getName();
                 // Si la imagen está encriptada, eliminar la versión encriptada
                 String encryptedImagePath = imagePath.replace(".jpg", "_enc.jpg");
-                 String URL =  Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pictures/" + fileName;
+                String URL =  Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pictures/" + fileName;
                 File encryptedFile = new File(URL);
 
                 if (encryptedFile.exists()) {
