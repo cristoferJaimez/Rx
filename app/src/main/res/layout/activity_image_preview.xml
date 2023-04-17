@@ -23,7 +23,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.888"
-        app:srcCompat="@drawable/icon_back_30x30" />
+        app:srcCompat="@drawable/back_svgrepo_com" />
 
 
     <ImageButton

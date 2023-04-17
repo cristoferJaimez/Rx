@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 class Result {
+    public float orientation;
     int classIndex;
     Float score;
     Rect rect;

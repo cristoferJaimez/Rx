@@ -16,6 +16,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.dev.rx.alerts.SuccessDialog;
 import com.dev.rx.login.Login;
 import com.dev.rx.pytorch.ObjectDetectionActivity;
 
@@ -29,8 +30,6 @@ import java.util.List;
 import java.util.Map;
 
 public class Mysql {
-
-
     public void send(Context context,
                      String country,
                      String city,
@@ -46,7 +45,7 @@ public class Mysql {
 
         RequestQueue queue = Volley.newRequestQueue(context);
         Handler handler = new Handler(Looper.getMainLooper());
-        String url = "http://18.223.43.180/services/register_pharma_users.php";
+        String url = "http://18.219.242.84/services/register_pharma_users.php";
 
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
@@ -60,6 +59,8 @@ public class Mysql {
                                     Toast.makeText(context, "Farmacia registrada!...", Toast.LENGTH_SHORT).show();
                                     Toast.makeText(context, "Ingrese credenciales para iniciar sessión!...", Toast.LENGTH_SHORT).show();
                                     // Continuar con el proceso de autenticación
+
+
 
                                     Intent intent = new Intent(context, Login.class);
                                     context.startActivity(intent);
@@ -118,7 +119,7 @@ public class Mysql {
     //llenar campos autocomplete
     public void selectOne(Context context,
                           VolleyCallback callback) {
-        String url = "http://18.223.43.180/services/select_type_pharma.php";
+        String url = "http://18.219.242.84/services/select_type_pharma.php";
         List<String> listaValores = new ArrayList<>();
 
         // Crear una solicitud HTTP utilizando la biblioteca Volley
@@ -155,7 +156,7 @@ public class Mysql {
 
     public void selectTwo(Context context,
                           VolleyCallback callback) {
-        String url = "http://18.223.43.180/services/select_type_cadena.php";
+        String url = "http://18.219.242.84/services/select_type_cadena.php";
 
         // Crear una solicitud HTTP utilizando la biblioteca Volley
         RequestQueue queue = Volley.newRequestQueue(context);
@@ -189,7 +190,7 @@ public class Mysql {
 
     public void selectTree(Context context,
                           VolleyCallback callback) {
-        String url = "http://18.223.43.180/services/select_pharma.php";
+        String url = "http://18.219.242.84/services/select_pharma.php";
 
         // Crear una solicitud HTTP utilizando la biblioteca Volley
         RequestQueue queue = Volley.newRequestQueue(context);
@@ -230,7 +231,7 @@ public class Mysql {
 
         RequestQueue queue = Volley.newRequestQueue(context);
         Handler handler = new Handler(Looper.getMainLooper());
-        String url = "http://18.223.43.180/services/validate_user.php";
+        String url = "http://18.219.242.84/services/validate_user.php";
 
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
@@ -241,20 +242,20 @@ public class Mysql {
                             @Override
                             public void run() {
                                 if (response.equals("true")) {
-                                    Toast.makeText(context, "El usuario y la contraseña son válidos", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context, "El usuario y la contraseña son válidos" + response, Toast.LENGTH_SHORT).show();
                                     // Continuar con el proceso de autenticación
                                     //crear token
                                     SharedPreferences prefs = context.getSharedPreferences("MisPreferencias", context.MODE_PRIVATE);
                                     SharedPreferences.Editor editor = prefs.edit();
+                                    //editor.putInt("id", response); // Guarda el id de usuario
                                     editor.putBoolean("estaConectado", true); //Guarda el estado de inicio de sesión
                                     editor.apply(); //Guarda los cambios en las preferencias compartidas
-
                                     //guardar en cache id de usuario
                                     //getFkPharma(context, user);
+                                    getUsers(context, user);
 
                                     Intent intent = new Intent(context,ObjectDetectionActivity.class);
                                     context.startActivity(intent);
-
                                 } else {
                                     Toast.makeText(context, "El usuario o la contraseña son incorrectos", Toast.LENGTH_SHORT).show();
                                     // Pedir al usuario que ingrese sus credenciales nuevamente
@@ -291,10 +292,10 @@ public class Mysql {
 
 
     // optenr id de usuario
-    public void getFkPharma(Context context, String user) {
+    public void getUsers(Context context, String user) {
         RequestQueue queue = Volley.newRequestQueue(context);
         Handler handler = new Handler(Looper.getMainLooper());
-        String url = "http://18.223.43.180/services/id_user.php";
+        String url = "http://18.219.242.84/services/select_data_user.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
@@ -304,16 +305,14 @@ public class Mysql {
                             @Override
                             public void run() {
                                 try {
-                                    JSONObject jsonObject = new JSONObject(response);
-                                    int fkPharma = jsonObject.getInt("fk_pharma");
+                                    JSONArray jsonArray = new JSONArray(response);
+                                    JSONObject jsonObject = jsonArray.getJSONObject(0);
+                                    //System.out.println(" ---> aqui ----Z>"  + jsonObject.getString("ftp"));
+                                    String ftp = jsonObject.getString("ftp");
                                     SharedPreferences prefs = context.getSharedPreferences("myPrefs", context.MODE_PRIVATE);
                                     SharedPreferences.Editor editor = prefs.edit();
-                                    editor.putInt("fkPharma", fkPharma);
+                                    editor.putString("ftp", ftp);
                                     editor.apply();
-
-
-                                    // Hacer lo que quieras con el valor de fk_pharma
-                                    Log.d("ResMysql", "Valor de fk_pharma: " + fkPharma);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -336,13 +335,15 @@ public class Mysql {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-                params.put("user", user);
+                params.put("username", user);
                 return params;
             }
         };
 
         queue.add(stringRequest);
     }
+
+
 
 }
 

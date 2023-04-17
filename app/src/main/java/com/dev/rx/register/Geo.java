@@ -3,7 +3,10 @@ package com.dev.rx.register;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.widget.AdapterView;
+
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -83,83 +86,96 @@ public class Geo extends AppCompatActivity {
         mysql.selectOne(this, new Mysql.VolleyCallback() {
             @Override
             public void onSuccess(List<String> result) {
-                // Obtener una referencia al AutoCompleteTextView del diseño
-                AutoCompleteTextView autoCompleteTextView = findViewById(R.id.autoCompleteTextView);
 
-                // Configure un ArrayAdapter con sus datos
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(Geo.this, android.R.layout.simple_dropdown_item_1line, result);
+                    // Obtener una referencia al AutoCompleteTextView del diseño
+                    AutoCompleteTextView autoCompleteTextView = findViewById(R.id.autoCompleteTextView);
 
-                // Establecer el adaptador en el AutoCompleteTextView
-                autoCompleteTextView.setAdapter(adapter);
+                    // Configure un ArrayAdapter con sus datos
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(Geo.this, android.R.layout.simple_dropdown_item_1line, result);
 
-                // Configure un listener para manejar la selección del usuario
-                autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        // Obtener el valor seleccionado y hacer algo con él
-                        String selectedItem = (String) parent.getItemAtPosition(position);
-                        Toast.makeText(Geo.this, "Seleccionó: " + selectedItem, Toast.LENGTH_SHORT).show();
-                    }
-                });
+                    // Establecer el adaptador en el AutoCompleteTextView
+                    autoCompleteTextView.setAdapter(adapter);
 
-                // Agregue un TextChangedListener para realizar la búsqueda mientras el usuario escribe
-                autoCompleteTextView.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                    }
+                    // Configure un listener para manejar la selección del usuario
+                    autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            // Obtener el valor seleccionado y hacer algo con él
+                            String selectedItem = (String) parent.getItemAtPosition(position);
+                            Toast.makeText(Geo.this, "Seleccionó: " + selectedItem, Toast.LENGTH_SHORT).show();
+                            AutoCompleteTextView siguienteAutoCompleteTextView = findViewById(R.id.autoCompleteCadena);
+                            if(selectedItem.equals("Independiente")){
+                                // Deshabilitar el siguiente AutoCompleteTextView
+                                siguienteAutoCompleteTextView.setEnabled(false);
+                                siguienteAutoCompleteTextView.setText("S/N");
+                            }else if(selectedItem.equals("Cadena")){
+                                siguienteAutoCompleteTextView.setEnabled(true);
+                                siguienteAutoCompleteTextView.setText("");
+                            }
+                        }
+                    });
 
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        // Filtro de búsqueda
-                        adapter.getFilter().filter(s.toString());
-                    }
+                    // Agregue un TextChangedListener para realizar la búsqueda mientras el usuario escribe
+                    autoCompleteTextView.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                        }
 
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                    }
-                });
-            }
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                            // Filtro de búsqueda
+                            adapter.getFilter().filter(s.toString());
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) {
+                        }
+                    });
+                }
         });
 
         mysql.selectTwo(this, new Mysql.VolleyCallback() {
             @Override
             public void onSuccess(List<String> result) {
-                // Obtener una referencia al AutoCompleteTextView del diseño
-                AutoCompleteTextView autoCompleteTextView = findViewById(id.autoCompleteCadena);
 
-                // Configure un ArrayAdapter con sus datos
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(Geo.this, android.R.layout.simple_dropdown_item_1line, result);
 
-                // Establecer el adaptador en el AutoCompleteTextView
-                autoCompleteTextView.setAdapter(adapter);
+                    // Obtener una referencia al AutoCompleteTextView del diseño
+                    AutoCompleteTextView autoCompleteTextView = findViewById(id.autoCompleteCadena);
 
-                // Configure un listener para manejar la selección del usuario
-                autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        // Obtener el valor seleccionado y hacer algo con él
-                        String selectedItem = (String) parent.getItemAtPosition(position);
-                        Toast.makeText(Geo.this, "Seleccionó: " + selectedItem, Toast.LENGTH_SHORT).show();
-                    }
-                });
+                    // Configure un ArrayAdapter con sus datos
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(Geo.this, android.R.layout.simple_dropdown_item_1line, result);
 
-                // Agregue un TextChangedListener para realizar la búsqueda mientras el usuario escribe
-                autoCompleteTextView.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                    }
+                    // Establecer el adaptador en el AutoCompleteTextView
+                    autoCompleteTextView.setAdapter(adapter);
 
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        // Filtro de búsqueda
-                        adapter.getFilter().filter(s.toString());
-                    }
+                    // Configure un listener para manejar la selección del usuario
+                    autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            // Obtener el valor seleccionado y hacer algo con él
+                            String selectedItem = (String) parent.getItemAtPosition(position);
+                            Toast.makeText(Geo.this, "Seleccionó: " + selectedItem, Toast.LENGTH_SHORT).show();
+                        }
+                    });
 
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                    }
-                });
-            }
+                    // Agregue un TextChangedListener para realizar la búsqueda mientras el usuario escribe
+                    autoCompleteTextView.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                            // Filtro de búsqueda
+                            adapter.getFilter().filter(s.toString());
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) {
+                        }
+                    });
+                }
+
         });
 
         mysql.selectTree(this, new Mysql.VolleyCallback() {

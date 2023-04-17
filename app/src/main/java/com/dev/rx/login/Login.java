@@ -10,6 +10,8 @@ import androidx.biometric.BiometricPrompt;
 import androidx.core.content.ContextCompat;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.XmlResourceParser;
@@ -116,6 +118,7 @@ public class Login extends AppCompatActivity {
                 @Override
                 public void onAuthenticationError(int errorCode,
                                                   @NonNull CharSequence errString) {
+
                     super.onAuthenticationError(errorCode, errString);
                     Toast.makeText(getApplicationContext(),
                                     "Authentication error: " + errString, Toast.LENGTH_SHORT)
@@ -126,6 +129,7 @@ public class Login extends AppCompatActivity {
                 public void onAuthenticationSucceeded(
                         @NonNull BiometricPrompt.AuthenticationResult result) {
                     super.onAuthenticationSucceeded(result);
+
                     Toast.makeText(getApplicationContext(),
                             "Authentication succeeded!", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(Login.this, ObjectDetectionActivity.class);
@@ -197,4 +201,6 @@ public class Login extends AppCompatActivity {
             }
         });
     }
+
+
 }

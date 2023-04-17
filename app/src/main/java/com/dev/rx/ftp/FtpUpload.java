@@ -2,6 +2,7 @@ package com.dev.rx.ftp;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.widget.Toast;
 
 import org.apache.commons.net.ftp.FTP;
@@ -34,8 +35,12 @@ public class FtpUpload {
             ftpClient.connect("181.188.248.23", 21);
             ftpClient.login("COSTA", "ii5D4XGYcoXzB9EF");
 
+            //opten direccion de fichero ftp de cache
+            SharedPreferences prefs = context.getSharedPreferences("myPrefs", context.MODE_PRIVATE);
+            String ftp = prefs.getString("ftp", ""); // el segundo parámetro es un valor predeterminado si no se encuentra la clave en las SharedPreferences
+            ftpClient.makeDirectory("/COSTA/"+ftp);
             // Cambiar al directorio donde se van a subir los archivos
-            ftpClient.changeWorkingDirectory("/COSTA/RX/CO/BOGOTA/INDEPENDIENTE/farma_cristo");
+            ftpClient.changeWorkingDirectory("/COSTA/"+ftp);
 
             //tiempo
             ftpClient.setSoTimeout(10000);
@@ -65,12 +70,13 @@ public class FtpUpload {
             ftpClient.logout();
             ftpClient.disconnect();
 
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             Activity activity = (Activity) mContext;
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(mContext, "Error al subir el archivo!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "Error al subir el archivo!" + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
             e.printStackTrace();

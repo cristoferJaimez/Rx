@@ -8,11 +8,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.RectShape;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -44,10 +49,11 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 
+import android.graphics.drawable.LayerDrawable;
+
 public class Gallery extends AppCompatActivity {
     private GridView gridView;
     private List<String> imagePaths = new ArrayList<>();
-
     private List<String> originalPaths = new ArrayList<>();
     private ImageButton btnBackCamera, btnFTP, btnDelete;
     private List<Integer> selectedPositions = new ArrayList<>();
@@ -115,7 +121,8 @@ public class Gallery extends AppCompatActivity {
                     ((ImageView) view).setImageDrawable(originalImage);
                     view.setTag(null);
                 }
-            } else {
+            }
+            else {
                 // Si el elemento no está seleccionado, lo seleccionamos y lo marcamos como seleccionado
                 selectedPositions.add(position);
                 // Guardar imagen original del view
@@ -192,8 +199,6 @@ public class Gallery extends AppCompatActivity {
 
         });
     }
-
-
     private void getImagesFiles() {
         // Obtener las rutas de las imágenes
         File directory = new File(Environment.getExternalStorageDirectory() + "/Pictures/");
@@ -218,15 +223,36 @@ public class Gallery extends AppCompatActivity {
         // Ordenar la lista de forma decreciente
         Collections.sort(imagePaths, Collections.reverseOrder());
         // Crear un adaptador para el GridView
-        adapter = new ImageAdapter(Gallery.this, imagePaths);
-        gridView.setAdapter(adapter);
+        if(imagePaths.isEmpty()){
+            // Crear un objeto ShapeDrawable para el color de fondo
+            ShapeDrawable shapeDrawable = new ShapeDrawable();
+            shapeDrawable.setShape(new RectShape());
+            shapeDrawable.getPaint().setColor(Color.parseColor("#ECEFF1"));
+
+            Drawable imageDrawable = getResources().getDrawable(R.drawable.image_missing_svgrepo_com_150x150);
+
+
+
+            // Crear un objeto LayerDrawable para combinar el color de fondo y el texto
+            Drawable[] layers = new Drawable[2];
+            layers[0] = shapeDrawable;
+            layers[1] = imageDrawable;
+            LayerDrawable layerDrawable = new LayerDrawable(layers);
+            layerDrawable.setLayerGravity(1, Gravity.CENTER);
+
+            // Establecer el objeto LayerDrawable como fondo del GridView
+            gridView.setBackground(layerDrawable);
+
+
+
+        }else {
+            adapter = new ImageAdapter(Gallery.this, imagePaths);
+            gridView.setAdapter(adapter);
+        }
     }
-
-
     private boolean isImageEncrypted(String filePath) {
         return filePath.endsWith("_enc.jpg");
     }
-
     private String decryptImage(String filePath) {
         try {
             // Decrypt the image using AES encryption
@@ -257,9 +283,6 @@ public class Gallery extends AppCompatActivity {
             return filePath;
         }
     }
-
-
-
     private static class ImageAdapter extends BaseAdapter {
         private final Context context;
         private final List<String> imagePaths;
@@ -335,8 +358,4 @@ public class Gallery extends AppCompatActivity {
             }
         }
     }
-
-
-
-
 }

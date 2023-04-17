@@ -42,7 +42,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/my_button_selector"
-        app:srcCompat="@drawable/icon_back_30x30" />
+        app:srcCompat="@drawable/back_svgrepo_com" />
 
     <TextView
         android:id="@+id/numeroRx"

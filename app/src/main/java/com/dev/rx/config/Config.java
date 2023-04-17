@@ -33,9 +33,7 @@ public class Config extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_config);
         SharedPreferences prefs = getSharedPreferences("myPrefs", MODE_PRIVATE);
-
         //obtenr datos para llenar campos
-
         int fkPharma = prefs.getInt("fkPharma", 0); //
         String user = prefs.getString("dbUSer",  "sin datos...");
         String address = prefs.getString("dbAddress",  "sin datos...");
@@ -43,23 +41,16 @@ public class Config extends AppCompatActivity {
         String ftp = prefs.getString("dbFtp",  "sin datos...");
 
 
+        //hacer consulta de datos
+
+
+
+
         btnBack = findViewById(R.id.btn_back_camera);
         info = findViewById(R.id.info);
         info2 = findViewById(R.id.info2);
         info3 = findViewById(R.id.info3);
 
-
-        textUser = findViewById(R.id.textView);
-        textAddress = findViewById(R.id.textView2);
-        textNamePharma = findViewById(R.id.textView3);
-        textFtp = findViewById(R.id.textView5);
-
-
-
-        textUser.setText(user);
-        textAddress.setText(address);
-        textNamePharma.setText(type);
-        textFtp.setText(ftp);
 
 
 

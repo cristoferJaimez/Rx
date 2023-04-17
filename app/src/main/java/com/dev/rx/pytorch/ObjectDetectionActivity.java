@@ -76,11 +76,11 @@ public class ObjectDetectionActivity extends AbstractCameraXActivity<ObjectDetec
         boolean switchState3 = prefs.getBoolean("switch3_state", false);
 
         if(switchState1 == true) {
-           // Establece el Drawable en la ImageView
+            // Establece el Drawable en la ImageView
             imageView.setBackgroundColor(GREEN);
         }
         if(switchState2 == true) {
-           // Establece el Drawable en la ImageView
+            // Establece el Drawable en la ImageView
             imageFtp.setBackgroundColor(GREEN);
         }
         if(switchState3 == true) {
