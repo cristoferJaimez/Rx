@@ -25,6 +25,7 @@ import android.view.View;
 import android.view.ViewStub;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
@@ -44,6 +45,7 @@ import org.pytorch.Module;
 import org.pytorch.Tensor;
 import org.pytorch.torchvision.TensorImageUtils;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -97,6 +99,8 @@ public class ObjectDetectionActivity extends AbstractCameraXActivity<ObjectDetec
                     Bitmap resultBitmap = mResultView.getResultBitmap();
                     if (resultBitmap != null) {
                         try {
+                            int orientation = getOrientation(bitmap); // Obtener orientación de la imagen original
+                            Toast.makeText(ObjectDetectionActivity.this, "Angulo: " + orientation, Toast.LENGTH_SHORT).show();
                             Bitmap resizedResultBitmap = Bitmap.createScaledBitmap(resultBitmap, bitmap.getWidth(), bitmap.getHeight(), true);
                             Bitmap mixedBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), bitmap.getConfig());
                             Canvas canvas = new Canvas(mixedBitmap);
@@ -110,8 +114,8 @@ public class ObjectDetectionActivity extends AbstractCameraXActivity<ObjectDetec
                                     (canvas.getHeight() - bitmap.getHeight() * scale) / 2f
                             );
                             canvas.drawBitmap(bitmap, matrix, null);
-                            canvas.drawBitmap(resizedResultBitmap, new Matrix(), null);
-
+                            matrix.postRotate(orientation); // Rotar la imagen mezclada según la orientación de la original
+                            canvas.drawBitmap(resizedResultBitmap, matrix, null);
                             // Reducir la calidad de la imagen
                             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                             mixedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream); // 50 es el nivel de calidad, puedes ajustarlo según tus necesidades
@@ -127,9 +131,9 @@ public class ObjectDetectionActivity extends AbstractCameraXActivity<ObjectDetec
                             e.printStackTrace();
                         }
                     }
-
                 }
-            });
+
+        });
 
 
         galleryButton = findViewById(R.id.btnGallery);
@@ -282,6 +286,32 @@ public class ObjectDetectionActivity extends AbstractCameraXActivity<ObjectDetec
         }
 
         return screenCapture;
+    }
+
+    private int getOrientation(Bitmap bitmap) {
+        try {
+            ExifInterface exifInterface = new ExifInterface(new ByteArrayInputStream(getBytesFromBitmap(bitmap)));
+            int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+            switch (orientation) {
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    return 90;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    return 180;
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    return 270;
+                default:
+                    return 0;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    private byte[] getBytesFromBitmap(Bitmap bitmap) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+        return outputStream.toByteArray();
     }
 
 
