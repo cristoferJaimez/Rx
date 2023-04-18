@@ -192,6 +192,7 @@ public class Gallery extends AppCompatActivity {
                                             deleteImageFile(imagePath);
                                             // Eliminar la ruta de la imagen de la lista de rutas
                                             imagePaths.remove(imagePath);
+                                            // colocar gallery en 0
 
                                             // Actualizar la vista de la galería
 
