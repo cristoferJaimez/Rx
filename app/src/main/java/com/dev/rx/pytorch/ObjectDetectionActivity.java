@@ -18,6 +18,7 @@ import android.media.Image;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.TextureView;
 import android.view.View;
@@ -30,6 +31,7 @@ import androidx.annotation.WorkerThread;
 import androidx.camera.core.ImageProxy;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.exifinterface.media.ExifInterface;
 
 import com.dev.rx.config.Config;
 import com.dev.rx.gallery.Gallery;
@@ -43,6 +45,8 @@ import org.pytorch.Tensor;
 import org.pytorch.torchvision.TensorImageUtils;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -56,14 +60,13 @@ public class ObjectDetectionActivity extends AbstractCameraXActivity<ObjectDetec
 
     private Bitmap bitmap ;
 
-    private MediaPlayer mediaPlayer;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         imageButton = findViewById(R.id.btnTakePicture);
-        mediaPlayer = MediaPlayer.create(this, R.raw.beep104060);
 
         //images front notifications
         ImageView imageView = findViewById(R.id.imageViewFront);
@@ -88,42 +91,49 @@ public class ObjectDetectionActivity extends AbstractCameraXActivity<ObjectDetec
             imageEncryt.setBackgroundColor(GREEN);
         }
 
-
         imageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Save the result image to gallery
-                mediaPlayer.start();
-                Bitmap resultBitmap = mResultView.getResultBitmap();
-                if (resultBitmap != null) {
-                    try {
-                        Bitmap resizedResultBitmap = Bitmap.createScaledBitmap(resultBitmap, bitmap.getWidth(), bitmap.getHeight(), true);
-                        Bitmap mixedBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), bitmap.getConfig());
-                        Canvas canvas = new Canvas(mixedBitmap);
-                        canvas.drawBitmap(bitmap, new Matrix(), null);
-                        canvas.drawBitmap(resizedResultBitmap, new Matrix(), null);
+                @Override
+                public void onClick(View view) {
+                    Bitmap resultBitmap = mResultView.getResultBitmap();
+                    if (resultBitmap != null) {
+                        try {
+                            Bitmap resizedResultBitmap = Bitmap.createScaledBitmap(resultBitmap, bitmap.getWidth(), bitmap.getHeight(), true);
+                            Bitmap mixedBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), bitmap.getConfig());
+                            Canvas canvas = new Canvas(mixedBitmap);
+                            Matrix matrix = new Matrix();
+                            float scaleX = (float)canvas.getWidth() / bitmap.getWidth();
+                            float scaleY = (float)canvas.getHeight() / bitmap.getHeight();
+                            float scale = Math.min(scaleX, scaleY);
+                            matrix.setScale(scale, scale);
+                            matrix.postTranslate(
+                                    (canvas.getWidth() - bitmap.getWidth() * scale) / 2f,
+                                    (canvas.getHeight() - bitmap.getHeight() * scale) / 2f
+                            );
+                            canvas.drawBitmap(bitmap, matrix, null);
+                            canvas.drawBitmap(resizedResultBitmap, new Matrix(), null);
 
-                        //vista previa
-                        // Reducir la calidad de la imagen
-                        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                        mixedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream); // 50 es el nivel de calidad, puedes ajustarlo según tus necesidades
-                        byte[] byteArray = outputStream.toByteArray();
+                            // Reducir la calidad de la imagen
+                            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                            mixedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream); // 50 es el nivel de calidad, puedes ajustarlo según tus necesidades
+                            byte[] byteArray = outputStream.toByteArray();
 
+                            final Intent intent = new Intent(ObjectDetectionActivity.this, ViewPicture.class);
+                            intent.putExtra("mixedBitmap", byteArray);
+                            // Inicia la actividad ViewPicture
+                            startActivity(intent);
 
-                        final Intent intent = new Intent(ObjectDetectionActivity.this, ViewPicture.class);
-                        intent.putExtra("mixedBitmap", byteArray);
-                        // Inicia la actividad ViewPicture
-                        startActivity(intent);
-
-                    } catch (NullPointerException e) {
-                        // Handle the case where a NullPointerException is thrown
-                        e.printStackTrace();
+                        } catch (NullPointerException e) {
+                            // Handle the case where a NullPointerException is thrown
+                            e.printStackTrace();
+                        }
                     }
-                }
 
-            }
-        });
+                }
+            });
+
+
         galleryButton = findViewById(R.id.btnGallery);
+
         galleryButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -241,6 +251,38 @@ public class ObjectDetectionActivity extends AbstractCameraXActivity<ObjectDetec
 
 
 
+
+    // This method returns a Bitmap of the screen capture
+    private Bitmap getScreenCapture(View view) {
+        Bitmap screenCapture = null;
+
+        try {
+            // Create a bitmap the size of the screen
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+            int width = displayMetrics.widthPixels;
+            int height = displayMetrics.heightPixels;
+            screenCapture = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+
+            // Create a canvas with the bitmap
+            Canvas canvas = new Canvas(screenCapture);
+
+            // Get the background of the view and draw it to the canvas
+            Drawable background = view.getBackground();
+            if (background != null) {
+                background.draw(canvas);
+            } else {
+                canvas.drawColor(Color.WHITE);
+            }
+
+            // Draw the view to the canvas
+            view.draw(canvas);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return screenCapture;
+    }
 
 
 
