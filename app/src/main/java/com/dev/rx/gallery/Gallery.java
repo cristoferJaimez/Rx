@@ -91,6 +91,27 @@ public class Gallery extends AppCompatActivity {
                         selectedPositions.clear();
                         gridView.invalidateViews();
                         btnDelete.setVisibility(View.GONE);
+
+                        if (imagePaths.isEmpty()){
+                            // Crear un objeto ShapeDrawable para el color de fondo
+                            ShapeDrawable shapeDrawable = new ShapeDrawable();
+                            shapeDrawable.setShape(new RectShape());
+                            shapeDrawable.getPaint().setColor(Color.parseColor("#ECEFF1"));
+
+                            Drawable imageDrawable = getResources().getDrawable(R.drawable.image_missing_svgrepo_com_150x150);
+
+
+
+                            // Crear un objeto LayerDrawable para combinar el color de fondo y el texto
+                            Drawable[] layers = new Drawable[2];
+                            layers[0] = shapeDrawable;
+                            layers[1] = imageDrawable;
+                            LayerDrawable layerDrawable = new LayerDrawable(layers);
+                            layerDrawable.setLayerGravity(1, Gravity.CENTER);
+
+                            // Establecer el objeto LayerDrawable como fondo del GridView
+                            gridView.setBackground(layerDrawable);
+                        }
                     })
                     .setNegativeButton("No", (dialog, id) -> {
                         // Cancelar la eliminación de los elementos seleccionados

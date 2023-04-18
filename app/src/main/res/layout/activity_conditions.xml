@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".conditions.Conditions">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="4dp"
+        android:elevation="8dp"
+        android:layout_margin="8dp"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="80dp"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/title"
+                android:textAlignment="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18dp"
+                android:text="@string/one"
+                android:textColor="@color/colorSpinnerText"/>
+            <com.codesgood.views.JustifiedTextView
+                android:id="@+id/tv_justified_paragraph"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="@string/p0"
+                android:textColor="@android:color/black"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/title1"
+                android:textAlignment="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18dp"
+                android:text="@string/title1"
+                android:textColor="@color/colorSpinnerText"/>
+            <com.codesgood.views.JustifiedTextView
+                android:id="@+id/tv_justified_paragraph1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="@string/p1"
+                android:textColor="@android:color/black"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/title2"
+                android:textAlignment="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18dp"
+                android:text="@string/title2"
+                android:textColor="@color/colorSpinnerText"/>
+            <com.codesgood.views.JustifiedTextView
+                android:id="@+id/tv_justified_paragraph2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="@string/p2"
+                android:textColor="@android:color/black"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/title3"
+                android:textAlignment="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18dp"
+                android:text="@string/title3"
+                android:textColor="@color/colorSpinnerText"/>
+            <com.codesgood.views.JustifiedTextView
+                android:id="@+id/tv_justified_paragraph3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="@string/p3"
+                android:textColor="@android:color/black"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/title4"
+                android:textAlignment="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18dp"
+                android:text="@string/title4"
+                android:textColor="@color/colorSpinnerText"/>
+            <com.codesgood.views.JustifiedTextView
+                android:id="@+id/tv_justified_paragraph4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="@string/p4"
+                android:textColor="@android:color/black"
+                android:textSize="15sp" />
+            <TextView
+                android:id="@+id/title5"
+                android:textAlignment="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18dp"
+                android:text="@string/title5"
+                android:textColor="@color/colorSpinnerText"/>
+            <com.codesgood.views.JustifiedTextView
+                android:id="@+id/tv_justified_paragraph5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="@string/p5"
+                android:textColor="@android:color/black"
+                android:textSize="15sp" />
+            <com.codesgood.views.JustifiedTextView
+                android:id="@+id/tv_justified_paragraph6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="@string/p6"
+                android:textColor="@android:color/black"
+                android:textSize="15sp"/>
+
+
+
+
+            <Button
+                android:id="@+id/btnAcept"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Acepto"
+                android:layout_marginBottom="10dp"/>
+
+            <Button
+                android:id="@+id/btnSalir"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Salir"
+                android:layout_marginBottom="20dp"/>
+
+        </LinearLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+
+
+
+</ScrollView>

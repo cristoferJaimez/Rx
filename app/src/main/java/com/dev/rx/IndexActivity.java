@@ -4,40 +4,50 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.dev.rx.conditions.Conditions;
 import com.dev.rx.login.Login;
 
 public class IndexActivity extends AppCompatActivity {
+
+    private static final long WAIT_TIME_MS = 3000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_index);
 
-        //new MongoConnect(this).connect();
         ImageView imageView = findViewById(R.id.imageView2);
         Animation appearAnimation = AnimationUtils.loadAnimation(this, R.anim.appear);
-        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) TextView txt = findViewById(R.id.textView4);
-
+        TextView textView = findViewById(R.id.textView4);
 
         imageView.startAnimation(appearAnimation);
-        txt.setAnimation(appearAnimation);
+        textView.setAnimation(appearAnimation);
 
+        SharedPreferences prefs = getSharedPreferences("myPrefs", MODE_PRIVATE);
 
-        new Handler().postDelayed(new Runnable() {
+        new CountDownTimer(WAIT_TIME_MS, WAIT_TIME_MS) {
             @Override
-            public void run() {
-                Intent intent = new Intent(IndexActivity.this, Login.class);
+            public void onTick(long millisUntilFinished) {
+                // do nothing
+            }
+
+            @Override
+            public void onFinish() {
+                boolean hasAccepted = prefs.getBoolean("accept", false);
+                Intent intent = hasAccepted ? new Intent(IndexActivity.this, Login.class)
+                        : new Intent(IndexActivity.this, Conditions.class);
                 startActivity(intent);
                 finish();
             }
-        }, 3000); // espera 5 segundos (5000 milisegundos) antes de iniciar la SegundaActivity
-
+        }.start();
     }
 }

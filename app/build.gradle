@@ -78,6 +78,8 @@ dependencies {
     def activity_version = "1.3.1"
     implementation "androidx.activity:activity-ktx:$activity_version"
 
+    implementation 'com.codesgood:justifiedtextview:1.1.0'
+
 }
 
 
