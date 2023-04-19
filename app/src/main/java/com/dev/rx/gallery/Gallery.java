@@ -186,22 +186,27 @@ public class Gallery extends AppCompatActivity {
                                         @Override
                                         public void run() {
                                             // Subir el archivo al servidor FTP
-                                            new FtpUpload(Gallery.this).uploadFileToFTP(imagePath, Gallery.this);
+                                            boolean resp =   new FtpUpload(Gallery.this).uploadFileToFTP(imagePath, Gallery.this);
 
-                                            // Eliminar la imagen una vez subida al FTP
-                                            deleteImageFile(imagePath);
-                                            // Eliminar la ruta de la imagen de la lista de rutas
-                                            imagePaths.remove(imagePath);
-                                            // colocar gallery en 0
+                                            if(resp == true){
+                                                // Eliminar la imagen una vez subida al FTP
+                                                deleteImageFile(imagePath);
+                                                // Eliminar la ruta de la imagen de la lista de rutas
+                                                imagePaths.remove(imagePath);
+                                                // colocar gallery en 0
 
-                                            // Actualizar la vista de la galería
+                                                // Actualizar la vista de la galería
 
-                                            runOnUiThread(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    gridView.invalidateViews();
-                                                }
-                                            });
+                                                runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        gridView.invalidateViews();
+                                                    }
+                                                });
+                                            }else{
+
+                                            }
+
                                         }
                                     }).start();
                                 }

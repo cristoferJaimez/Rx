@@ -15,12 +15,13 @@ import java.io.IOException;
 public class FtpUpload {
 
     private Context mContext;
-
+    private boolean isUpload = false;
     public FtpUpload(Context context) {
         mContext = context;
     }
 
-    public void uploadFileToFTP(String filePath, Context context) {
+    public boolean uploadFileToFTP(String filePath, Context context) {
+
         FTPClient ftpClient = new FTPClient();
         String name = null;
         String fileName = filePath.substring(filePath.lastIndexOf("/") + 1); // Obtiene "Rx_IMG_20230403_080801.jpg"
@@ -29,6 +30,7 @@ public class FtpUpload {
         } else {
             // Manejar el caso en el que el nombre de archivo no tiene el formato esperado
         }
+
 
         try {
             // Establecer la conexión con el servidor FTP
@@ -53,6 +55,8 @@ public class FtpUpload {
 
             // Subir el archivo al servidor FTP
             ftpClient.storeFile(name, inputStream);
+
+
             // Mostrar un Toast en el hilo principal de la aplicación
             Activity activity = (Activity) mContext;
             String finalName = name;
@@ -60,9 +64,10 @@ public class FtpUpload {
                 @Override
                 public void run() {
                     Toast.makeText(mContext, "Archivo: " + finalName + " cargado exitosamente", Toast.LENGTH_SHORT).show();
+                    isUpload = true;
+
                 }
             });
-
 
 
             // Cerrar el stream de entrada y la conexión FTP
@@ -77,9 +82,18 @@ public class FtpUpload {
                 @Override
                 public void run() {
                     Toast.makeText(mContext, "Error al subir el archivo!" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    isUpload = false;
                 }
             });
             e.printStackTrace();
         }
+
+        return isUpload;
     }
+
+
+
+
+
 }
+

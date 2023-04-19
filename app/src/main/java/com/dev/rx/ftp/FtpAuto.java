@@ -89,13 +89,15 @@ public class FtpAuto {
                             @Override
                             public void run() {
                                 Log.d("Archivo temporal", "Se ha creado correctamente: " + finalTempFile.getAbsolutePath());
-                                new FtpUpload(context).uploadFileToFTP(finalTempFile.getAbsolutePath(), context);
-                                // Eliminar la imagen encriptada una vez subida al FTP
-                                deleteImageFile(imagePath);
-                                // Eliminar la ruta de la imagen de la lista de rutas
-                                imagePaths.remove(imagePath);
-                                // Eliminar archivo temporal después de subirlo al servidor FTP
-                                finalTempFile.delete();
+                              boolean  res = new FtpUpload(context).uploadFileToFTP(finalTempFile.getAbsolutePath(), context);
+                               if(res == true){
+                                   // Eliminar la imagen encriptada una vez subida al FTP
+                                   deleteImageFile(imagePath);
+                                   // Eliminar la ruta de la imagen de la lista de rutas
+                                   imagePaths.remove(imagePath);
+                                   // Eliminar archivo temporal después de subirlo al servidor FTP
+                                   finalTempFile.delete();
+                               }else{}
                             }
                         }).start();
                     }
@@ -110,15 +112,17 @@ public class FtpAuto {
                         @Override
                         public void run() {
                             // Subir el archivo al servidor FTP
-                            new FtpUpload(context).uploadFileToFTP(imagePath, context);
+                          boolean res =  new FtpUpload(context).uploadFileToFTP(imagePath, context);
+                          if(res == true){
+                              // Eliminar la imagen una vez subida al FTP
+                              deleteImageFile(imagePath);
 
-                            // Eliminar la imagen una vez subida al FTP
-                            deleteImageFile(imagePath);
+                              // Eliminar la ruta de la imagen de la lista de rutas
+                              imagePaths.remove(imagePath);
 
-                            // Eliminar la ruta de la imagen de la lista de rutas
-                            imagePaths.remove(imagePath);
+                              // Actualizar la vista de la galería
+                          }else{}
 
-                            // Actualizar la vista de la galería
 
                         }
                     }).start();
