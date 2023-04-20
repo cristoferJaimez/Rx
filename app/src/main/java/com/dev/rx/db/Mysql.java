@@ -309,9 +309,11 @@ public class Mysql {
                                     JSONObject jsonObject = jsonArray.getJSONObject(0);
                                     //System.out.println(" ---> aqui ----Z>"  + jsonObject.getString("ftp"));
                                     String ftp = jsonObject.getString("ftp");
+                                    String pharma = jsonObject.getString("name_pharma");
                                     SharedPreferences prefs = context.getSharedPreferences("myPrefs", context.MODE_PRIVATE);
                                     SharedPreferences.Editor editor = prefs.edit();
                                     editor.putString("ftp", ftp);
+                                    editor.putString("name_pharma", pharma);
                                     editor.apply();
                                 } catch (JSONException e) {
                                     e.printStackTrace();

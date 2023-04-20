@@ -2,6 +2,8 @@ package com.dev.rx.pytorch;
 
 import static android.graphics.Color.GREEN;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -18,6 +20,7 @@ import android.media.Image;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.TextureView;
@@ -25,6 +28,7 @@ import android.view.View;
 import android.view.ViewStub;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -38,6 +42,7 @@ import com.dev.rx.config.Config;
 import com.dev.rx.gallery.Gallery;
 import com.dev.rx.R;
 import com.dev.rx.gallery.ViewPicture;
+import com.dev.rx.login.Login;
 
 import org.pytorch.IValue;
 import org.pytorch.LiteModuleLoader;
@@ -58,27 +63,32 @@ public class ObjectDetectionActivity extends AbstractCameraXActivity<ObjectDetec
 
     private ResultView mResultView;
 
-    private ImageButton imageButton, galleryButton, configButton;
+    private ImageButton imageButton, galleryButton, configButton, imageLogOut;
 
     private Bitmap bitmap ;
 
-
+    private TextView textNamePharma;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         imageButton = findViewById(R.id.btnTakePicture);
+        imageLogOut = findViewById(R.id.btnLogOut);
+
+        textNamePharma = findViewById(R.id.textNamePharma);
 
         //images front notifications
         ImageView imageView = findViewById(R.id.imageViewFront);
         ImageView imageFtp = findViewById(R.id.imageFTPFront);
         ImageView imageEncryt = findViewById(R.id.imageEncrytFront);
 
+
         SharedPreferences prefs = getSharedPreferences("myPrefs", MODE_PRIVATE);
         boolean switchState1 = prefs.getBoolean("switch1_state", false);
         boolean switchState2 = prefs.getBoolean("switch2_state", false);
         boolean switchState3 = prefs.getBoolean("switch3_state", false);
+        String name_pharma = prefs.getString("name_pharma", "S/N");
 
         if(switchState1 == true) {
             // Establece el Drawable en la ImageView
@@ -93,6 +103,8 @@ public class ObjectDetectionActivity extends AbstractCameraXActivity<ObjectDetec
             imageEncryt.setBackgroundColor(GREEN);
         }
 
+        textNamePharma.setText(name_pharma);
+
         imageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -100,7 +112,7 @@ public class ObjectDetectionActivity extends AbstractCameraXActivity<ObjectDetec
                     if (resultBitmap != null) {
                         try {
                             int orientation = getOrientation(bitmap); // Obtener orientación de la imagen original
-                            Toast.makeText(ObjectDetectionActivity.this, "Angulo: " + orientation, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(ObjectDetectionActivity.this, "Angulo: " + orientation, Toast.LENGTH_SHORT).show();
                             Bitmap resizedResultBitmap = Bitmap.createScaledBitmap(resultBitmap, bitmap.getWidth(), bitmap.getHeight(), true);
                             Bitmap mixedBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), bitmap.getConfig());
                             Canvas canvas = new Canvas(mixedBitmap);
@@ -161,7 +173,36 @@ public class ObjectDetectionActivity extends AbstractCameraXActivity<ObjectDetec
                 thread.start();
             }
         });
+
+
+        imageLogOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(ObjectDetectionActivity.this);
+                builder.setTitle("Cerrar sesión");
+                builder.setMessage("¿Estás seguro de que quieres cerrar sesión?");
+                builder.setIcon(R.drawable.alert_octagon_svgrepo_com); // Aquí agregas la imagen deseada
+                builder.setPositiveButton("Sí", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        SharedPreferences prefs = getSharedPreferences("MisPreferencias", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.clear();
+                        editor.commit();
+                        Intent intent = new Intent(ObjectDetectionActivity.this, Login.class);
+                        startActivity(intent);
+                        finish();
+
+                    }
+                });
+                builder.setNegativeButton("No", null);
+                builder.show();
+
+            }
+        });
+
     }
+
 
 
     static class AnalysisResult {

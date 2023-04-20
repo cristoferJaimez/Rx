@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPReply;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,26 +38,33 @@ public class FtpUpload {
             ftpClient.connect("181.188.248.23", 21);
             ftpClient.login("COSTA", "ii5D4XGYcoXzB9EF");
 
+            String url = "/COSTA/RX/CO/BOGOTA/INDEPENDIENTE/farma_cristo";
+
+            // Comprobar si la conexión se ha establecido correctamente
+            if (!FTPReply.isPositiveCompletion(ftpClient.getReplyCode())) {
+                ftpClient.disconnect();
+                throw new IOException("No se ha podido conectar al servidor FTP");
+            }
+
+            // Configurar modo pasivo
+            //ftpClient.enterLocalPassiveMode();
+
             //opten direccion de fichero ftp de cache
             SharedPreferences prefs = context.getSharedPreferences("myPrefs", context.MODE_PRIVATE);
             String ftp = prefs.getString("ftp", ""); // el segundo parámetro es un valor predeterminado si no se encuentra la clave en las SharedPreferences
-            ftpClient.makeDirectory("/COSTA/"+ftp);
+            //ftpClient.makeDirectory("/COSTA/"+ftp);
             // Cambiar al directorio donde se van a subir los archivos
-            ftpClient.changeWorkingDirectory("/COSTA/"+ftp);
+//            ftpClient.changeWorkingDirectory("/COSTA/"+ftp);
+            ftpClient.changeWorkingDirectory(url);
 
             //tiempo
             ftpClient.setSoTimeout(10000);
-
-            // Configurar el modo de transferencia de archivos
+            // Configurar el modo de transferencia de archivos.
             ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
-
             // Abrir un stream de entrada para el archivo que se va a subir
             FileInputStream inputStream = new FileInputStream(new File(filePath));
-
             // Subir el archivo al servidor FTP
             ftpClient.storeFile(name, inputStream);
-
-
             // Mostrar un Toast en el hilo principal de la aplicación
             Activity activity = (Activity) mContext;
             String finalName = name;
