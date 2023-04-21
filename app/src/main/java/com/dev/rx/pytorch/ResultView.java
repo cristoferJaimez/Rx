@@ -141,9 +141,12 @@ public class ResultView extends View {
             if (result.classIndex != 4) {
                 // Cargar la imagen desde el archivo en assets
                 Bitmap bmp = null;
+                // Definir la escala a utilizar
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inSampleSize = 0; // Escala de 1/3 (30%)
                 try {
                     InputStream inputStream = getContext().getAssets().open("cinta.jpg");
-                    bmp = BitmapFactory.decodeStream(inputStream);
+                    bmp = BitmapFactory.decodeStream(inputStream, null, options);
                     inputStream.close();
                 } catch (IOException e) {
                     e.printStackTrace();

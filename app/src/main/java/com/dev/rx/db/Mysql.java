@@ -312,6 +312,7 @@ public class Mysql {
                                     String pharma = jsonObject.getString("name_pharma");
                                     SharedPreferences prefs = context.getSharedPreferences("myPrefs", context.MODE_PRIVATE);
                                     SharedPreferences.Editor editor = prefs.edit();
+
                                     editor.putString("ftp", ftp);
                                     editor.putString("name_pharma", pharma);
                                     editor.apply();

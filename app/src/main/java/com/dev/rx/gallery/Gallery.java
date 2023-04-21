@@ -3,7 +3,9 @@ package com.dev.rx.gallery;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,6 +16,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -33,10 +36,14 @@ import com.dev.rx.R;
 import com.dev.rx.ftp.FtpUpload;
 import com.dev.rx.pytorch.ObjectDetectionActivity;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -181,41 +188,103 @@ public class Gallery extends AppCompatActivity {
                 builder.setMessage("¿Desea subir las imágenes seleccionadas al servidor FTP?")
                         .setPositiveButton("Sí", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
+                                final ProgressDialog[] progressDialog = new ProgressDialog[1];
+                                Activity activity = Gallery.this;
+                                activity.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        progressDialog[0] = new ProgressDialog(Gallery.this);
+                                        progressDialog[0].setMessage("Cargando archivo...");
+                                        //progressDialog[0].setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                                        progressDialog[0].setIndeterminate(true);
+                                        progressDialog[0].setMax(100);
+                                        progressDialog[0].setCancelable(false);
+                                        progressDialog[0].show();
+                                    }
+                                });
+
+                                long totalBytes = 0;
                                 for (String imagePath : imagePaths) {
+                                    try {
+                                        totalBytes += new File(imagePath).length();
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+                                final long[] bytesReadTotal = {0};
+                                final int updateThreshold = (int) (totalBytes * 0.01); // Update progress every 1% of the total bytes
+                                final int[] progress = {0};
+                                for (String imagePath : imagePaths) {
+                                    long finalTotalBytes = totalBytes;
                                     new Thread(new Runnable() {
                                         @Override
                                         public void run() {
-                                            // Subir el archivo al servidor FTP
-                                            boolean resp =   new FtpUpload(Gallery.this).uploadFileToFTP(imagePath, Gallery.this);
-
-                                            if(resp == true){
-                                                // Eliminar la imagen una vez subida al FTP
-                                                deleteImageFile(imagePath);
-                                                // Eliminar la ruta de la imagen de la lista de rutas
-                                                imagePaths.remove(imagePath);
-                                                // colocar gallery en 0
-
-                                                // Actualizar la vista de la galería
-
-                                                runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        gridView.invalidateViews();
-                                                    }
-                                                });
-                                            }else{
-
+                                            InputStream inputStream = null;
+                                            try {
+                                                inputStream = new BufferedInputStream(new FileInputStream(imagePath));
+                                            } catch (FileNotFoundException e) {
+                                                e.printStackTrace();
                                             }
 
+                                            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                                            byte[] buffer = new byte[1024];
+                                            int bytesRead;
+
+                                            while (true) {
+                                                try {
+                                                    if (!((bytesRead = inputStream.read(buffer)) != -1))
+                                                        break;
+                                                } catch (IOException e) {
+                                                    throw new RuntimeException(e);
+                                                }
+                                                outputStream.write(buffer, 0, bytesRead);
+                                                bytesReadTotal[0] += bytesRead;
+
+                                                if (bytesReadTotal[0] >= updateThreshold) { // Update progress only when enough bytes have been read
+                                                    progress[0] = (int) ((bytesReadTotal[0] * 100) / finalTotalBytes);
+                                                    activity.runOnUiThread(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            progressDialog[0].setProgress(progress[0]);
+                                                            progressDialog[0].setMessage("Cargando archivo: " + imagePath);
+                                                        }
+                                                    });
+                                                    bytesReadTotal[0] = 0; // Reset the byte count
+                                                }
+                                            }
+
+                                            // Realiza la operación de red en un hilo separado utilizando AsyncTask
+                                            new AsyncTask<String, Void, Boolean>() {
+                                                @Override
+                                                protected Boolean doInBackground(String... params) {
+                                                    return new FtpUpload(Gallery.this).uploadFileToFTP(params[0], Gallery.this);
+                                                }
+
+                                                @Override
+                                                protected void onPostExecute(Boolean result) {
+                                                    if (result == true) {
+                                                        deleteImageFile(imagePath);
+                                                        imagePaths.remove(imagePath);
+                                                        progressDialog[0].dismiss();
+                                                        activity.runOnUiThread(new Runnable() {
+                                                            @Override
+                                                            public void run() {
+                                                                gridView.invalidateViews();
+                                                            }
+                                                        });
+                                                    }
+                                                }
+                                            }.execute(imagePath);
                                         }
                                     }).start();
                                 }
-
                             }
-                        })
+                            })
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 // Cancelar la acción de subir la imagen
+
                                 dialog.dismiss();
                             }
                         });

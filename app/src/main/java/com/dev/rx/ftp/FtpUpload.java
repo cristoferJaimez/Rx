@@ -1,28 +1,34 @@
 package com.dev.rx.ftp;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.widget.Toast;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class FtpUpload {
-
     private Context mContext;
     private boolean isUpload = false;
     public FtpUpload(Context context) {
         mContext = context;
     }
-
     public boolean uploadFileToFTP(String filePath, Context context) {
-
+        // Recuperar las preferencias compartidas
+        SharedPreferences prefs = context.getSharedPreferences("myPrefs", context.MODE_PRIVATE);
+        // Obtener el valor actual de la clave "ftp" (usando una cadena vacía como valor predeterminado si no se encuentra la clave)
+        String ftp = prefs.getString("ftp", "");
+        Activity activity = (Activity) mContext;
         FTPClient ftpClient = new FTPClient();
         String name = null;
         String fileName = filePath.substring(filePath.lastIndexOf("/") + 1); // Obtiene "Rx_IMG_20230403_080801.jpg"
@@ -34,28 +40,59 @@ public class FtpUpload {
 
 
         try {
+
             // Establecer la conexión con el servidor FTP
-            ftpClient.connect("181.188.248.23", 21);
-            ftpClient.login("COSTA", "ii5D4XGYcoXzB9EF");
-
-            String url = "/COSTA/RX/CO/BOGOTA/INDEPENDIENTE/farma_cristo";
-
-            // Comprobar si la conexión se ha establecido correctamente
+            ftpClient.connect("190.145.95.242", 21);
             if (!FTPReply.isPositiveCompletion(ftpClient.getReplyCode())) {
                 ftpClient.disconnect();
                 throw new IOException("No se ha podido conectar al servidor FTP");
             }
 
-            // Configurar modo pasivo
-            //ftpClient.enterLocalPassiveMode();
+            // Iniciar sesión en el servidor FTP
+            if (!ftpClient.login("ftp_app","SddS")) {
+                ftpClient.disconnect();
+                if (ftpClient.getReplyCode() == 530) {
+                    throw new IOException("Inicio de sesión fallido: usuario o contraseña incorrectos");
+                } else {
+                    throw new IOException("Inicio de sesión fallido");
+                }
+            }
 
-            //opten direccion de fichero ftp de cache
-            SharedPreferences prefs = context.getSharedPreferences("myPrefs", context.MODE_PRIVATE);
-            String ftp = prefs.getString("ftp", ""); // el segundo parámetro es un valor predeterminado si no se encuentra la clave en las SharedPreferences
-            //ftpClient.makeDirectory("/COSTA/"+ftp);
-            // Cambiar al directorio donde se van a subir los archivos
-//            ftpClient.changeWorkingDirectory("/COSTA/"+ftp);
-            ftpClient.changeWorkingDirectory(url);
+            // Verificar el puerto
+            int replyCode = ftpClient.sendCommand("PASV");
+            if (replyCode != 227) {
+                ftpClient.disconnect();
+                throw new IOException("No se puede conectar al servidor FTP: puerto incorrecto");
+            }
+
+
+            // Especifica la ruta de la carpeta remota a crear en el servidor FTP
+            String remoteDirPath = "/App/" + ftp;
+            if (remoteDirPath.contains("S/N")) {
+                remoteDirPath = remoteDirPath.replace("S/N/", "");
+            }
+
+            // Verificar si la carpeta ya existe en el servidor FTP
+            boolean directoryExists = false;
+            FTPFile[] remoteDirectories = ftpClient.listDirectories(remoteDirPath);
+            for (FTPFile remoteDirectory : remoteDirectories) {
+                if (remoteDirectory.isDirectory() && remoteDirectory.getName().equals(remoteDirPath)) {
+                    directoryExists = true;
+                    break;
+                }
+            }
+
+            // Si la carpeta no existe, crearla en el servidor FTP
+            if (!directoryExists) {
+                if (!ftpClient.makeDirectory(remoteDirPath)) {
+                    //throw new IOException("No se pudo crear la carpeta en el servidor FTP");
+                    //Toast.makeText(activity, "Carpeta Encontrada", Toast.LENGTH_SHORT).show();
+                }else{
+                    ftpClient.makeDirectory(remoteDirPath);
+                }
+            }
+
+            ftpClient.changeWorkingDirectory(remoteDirPath);
 
             //tiempo
             ftpClient.setSoTimeout(10000);
@@ -66,18 +103,15 @@ public class FtpUpload {
             // Subir el archivo al servidor FTP
             ftpClient.storeFile(name, inputStream);
             // Mostrar un Toast en el hilo principal de la aplicación
-            Activity activity = (Activity) mContext;
             String finalName = name;
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     Toast.makeText(mContext, "Archivo: " + finalName + " cargado exitosamente", Toast.LENGTH_SHORT).show();
-                    isUpload = true;
 
                 }
             });
-
-
+            isUpload = true;
             // Cerrar el stream de entrada y la conexión FTP
             inputStream.close();
             ftpClient.logout();
@@ -85,23 +119,18 @@ public class FtpUpload {
 
         }
         catch (IOException e) {
-            Activity activity = (Activity) mContext;
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     Toast.makeText(mContext, "Error al subir el archivo!" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    isUpload = false;
+
                 }
             });
+            isUpload = false;
             e.printStackTrace();
         }
 
         return isUpload;
     }
-
-
-
-
-
 }
 
