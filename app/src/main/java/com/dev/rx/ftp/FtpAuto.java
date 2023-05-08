@@ -1,14 +1,11 @@
 package com.dev.rx.ftp;
 
 import android.content.Context;
-import android.media.MediaScannerConnection;
 import android.os.Environment;
 import android.util.Log;
-import android.widget.GridView;
 import android.widget.Toast;
 
-import com.dev.rx.R;
-import com.dev.rx.gallery.Gallery;
+
 
 import java.io.File;
 import java.io.FileInputStream;

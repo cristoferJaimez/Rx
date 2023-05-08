@@ -273,6 +273,8 @@ public class Gallery extends AppCompatActivity {
                                                                 gridView.invalidateViews();
                                                             }
                                                         });
+                                                    }else{
+                                                        progressDialog[0].dismiss();
                                                     }
                                                 }
                                             }.execute(imagePath);

@@ -1,7 +1,6 @@
 package com.dev.rx.ftp;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.widget.Toast;
@@ -11,10 +10,8 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class FtpUpload {
@@ -129,7 +126,6 @@ public class FtpUpload {
             isUpload = false;
             e.printStackTrace();
         }
-
         return isUpload;
     }
 }
