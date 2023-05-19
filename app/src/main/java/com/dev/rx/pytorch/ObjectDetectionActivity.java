@@ -88,7 +88,7 @@ public class ObjectDetectionActivity extends AbstractCameraXActivity<ObjectDetec
         boolean switchState1 = prefs.getBoolean("switch1_state", false);
         boolean switchState2 = prefs.getBoolean("switch2_state", false);
         boolean switchState3 = prefs.getBoolean("switch3_state", false);
-        String name_pharma = prefs.getString("ftp", "S/N");
+        String name_pharma = prefs.getString("name_pharma", "S/N");
 
         if(switchState1 == true) {
             // Establece el Drawable en la ImageView

@@ -22,7 +22,6 @@
         android:id="@+id/resultView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="0dp"
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -58,7 +57,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.99"
-        app:srcCompat="@drawable/icon_gallery_32x32" />
+        app:srcCompat="@drawable/register_32x32" />
 
     <ImageButton
         android:id="@+id/btnConfig"
@@ -74,6 +73,7 @@
         app:srcCompat="@drawable/icon_config_50x50" />
 
     <ImageView
+        android:visibility="invisible"
         android:id="@+id/imageViewFront"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -85,6 +85,7 @@
         app:srcCompat="@drawable/icon_view_30x30" />
 
     <ImageView
+        android:visibility="invisible"
         android:id="@+id/imageFTPFront"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -96,6 +97,7 @@
         app:srcCompat="@drawable/icon_ftp_30x30" />
 
     <ImageView
+        android:visibility="invisible"
         android:id="@+id/imageEncrytFront"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -110,13 +112,16 @@
         android:id="@+id/btnLogOut"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        android:layout_alignEnd="@id/editTextTextCount"
+        android:layout_alignBottom="@id/editTextTextCount"
         android:background="@drawable/my_button_selector"
+        android:contentDescription="btn log Out"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.996"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.044"
+        app:layout_constraintVertical_bias="0.115"
         app:srcCompat="@drawable/log_out_svgrepo_com" />
 
     <TextView
@@ -126,10 +131,29 @@
         android:background="@color/white"
         android:text="Name Pharma."
         android:textAlignment="center"
+        android:gravity="center"
+        android:contentDescription="text name pharma"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         tools:layout_editor_absoluteY="0dp" />
+
+    <TextView
+        android:id="@+id/editTextTextCount"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="#FFFF"
+        android:ems="10"
+        android:gravity="center"
+        android:inputType="text"
+        android:text="Contador Rx mes actual: 0"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@+id/btnTakePicture"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/resultView"
+        app:layout_constraintVertical_bias="0.032" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
