@@ -23,11 +23,13 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -79,7 +81,25 @@ public class Gallery extends AppCompatActivity {
         btnFTP = findViewById(R.id.btnFTP);
         btnDelete = findViewById(R.id.btnDelete);
         textView = findViewById(R.id.numeroRx); // Reemplaza "text_view_id" con el ID de tu TextView
+        ListView listView = findViewById(R.id.listView);
 
+        for (String path : imagePaths) {
+            Log.d("MyAppLLL", "Image path: " + path);
+        }
+
+            //cargar el listado de imagenes
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, imagePaths) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                TextView textView = view.findViewById(android.R.id.text1);
+                File file = new File(imagePaths.get(position));
+                String fileName = file.getName();
+                textView.setText(fileName);
+                return view;
+            }
+        };
+        listView.setAdapter(adapter);
         getImagesFiles();
 
         btnDelete.setOnClickListener(v -> {
@@ -184,6 +204,18 @@ public class Gallery extends AppCompatActivity {
         });
         btnFTP.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                if (imagePaths.isEmpty()) {
+                    // No hay archivos para subir, mostrar diálogo y salir de la función
+                    AlertDialog.Builder builder = new AlertDialog.Builder(Gallery.this);
+                    builder.setMessage("No hay archivos para subir al FTP.")
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.dismiss();
+                                }
+                            });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }else{
                 AlertDialog.Builder builder = new AlertDialog.Builder(Gallery.this);
                 builder.setMessage("¿Desea subir las imágenes seleccionadas al servidor FTP?")
                         .setPositiveButton("Sí", new DialogInterface.OnClickListener() {
@@ -293,6 +325,7 @@ public class Gallery extends AppCompatActivity {
                 AlertDialog dialog = builder.create();
                 dialog.show();
 
+             }
             }
 
         });
@@ -316,6 +349,9 @@ public class Gallery extends AppCompatActivity {
         }
 
         int numFotos = imagePaths.size();
+
+
+
         texto = "Número de Rx: " + numFotos;
         textView.setText(texto);
         // Ordenar la lista de forma decreciente

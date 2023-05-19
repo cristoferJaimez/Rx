@@ -112,16 +112,12 @@
         android:id="@+id/btnLogOut"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_alignEnd="@id/editTextTextCount"
-        android:layout_alignBottom="@id/editTextTextCount"
+        android:layout_marginTop="84dp"
+        android:layout_marginEnd="12dp"
         android:background="@drawable/my_button_selector"
         android:contentDescription="btn log Out"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.115"
         app:srcCompat="@drawable/log_out_svgrepo_com" />
 
     <TextView
