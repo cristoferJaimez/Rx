@@ -47,7 +47,7 @@ import java.util.Locale;
 
 public class Geo extends AppCompatActivity {
 
-    private Button btnBack, btnNext;
+    private Button btnBack, btnNext,   btnReload;
 
     private static final int REQUEST_LOCATION_PERMISSION = 1;
     private FusedLocationProviderClient mFusedLocationProviderClient;
@@ -66,7 +66,7 @@ public class Geo extends AppCompatActivity {
 
         btnBack = findViewById(id.btnBack);
         btnNext = findViewById(id.btnNext);
-
+        btnReload = findViewById(id.btnReload);
         editTextTextCountry = findViewById(id.editTextTextCountry);
         editTextTextCity = findViewById(id.editTextTextCity);
         editTextTextCode = findViewById(id.editTextTextCode);
@@ -104,7 +104,11 @@ public class Geo extends AppCompatActivity {
                             String selectedItem = (String) parent.getItemAtPosition(position);
                             Toast.makeText(Geo.this, "Seleccionó: " + selectedItem, Toast.LENGTH_SHORT).show();
                             AutoCompleteTextView siguienteAutoCompleteTextView = findViewById(R.id.autoCompleteCadena);
-                            if(selectedItem.equals("Independiente")){
+                            if(selectedItem.equals("Independiente")) {
+                                // Deshabilitar el siguiente AutoCompleteTextView
+                                siguienteAutoCompleteTextView.setEnabled(false);
+                                siguienteAutoCompleteTextView.setText("S/N");
+                            }else if(selectedItem.equals("Independientes Coopidrogas")){
                                 // Deshabilitar el siguiente AutoCompleteTextView
                                 siguienteAutoCompleteTextView.setEnabled(false);
                                 siguienteAutoCompleteTextView.setText("S/N");
@@ -224,6 +228,13 @@ public class Geo extends AppCompatActivity {
         getLocationInfo();
 
 
+        //recargar geo localizacion :
+        btnReload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getLocationInfo();
+            }
+        });
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

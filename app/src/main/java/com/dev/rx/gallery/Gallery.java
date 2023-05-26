@@ -35,6 +35,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.dev.rx.R;
+import com.dev.rx.customList.CustomListAdapter;
 import com.dev.rx.ftp.FtpUpload;
 import com.dev.rx.pytorch.ObjectDetectionActivity;
 
@@ -70,6 +71,9 @@ public class Gallery extends AppCompatActivity {
     private ImageAdapter adapter;
 
     private String texto;
+
+    private ListView listView;
+
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +91,11 @@ public class Gallery extends AppCompatActivity {
             Log.d("MyAppLLL", "Image path: " + path);
         }
 
+
+
+
+
+
             //cargar el listado de imagenes
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, imagePaths) {
             @Override
@@ -101,6 +110,12 @@ public class Gallery extends AppCompatActivity {
         };
         listView.setAdapter(adapter);
         getImagesFiles();
+
+
+
+
+
+
 
         btnDelete.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(Gallery.this);
@@ -216,6 +231,7 @@ public class Gallery extends AppCompatActivity {
                     AlertDialog dialog = builder.create();
                     dialog.show();
                 }else{
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(Gallery.this);
                 builder.setMessage("¿Desea subir las imágenes seleccionadas al servidor FTP?")
                         .setPositiveButton("Sí", new DialogInterface.OnClickListener() {
@@ -313,7 +329,9 @@ public class Gallery extends AppCompatActivity {
                                         }
                                     }).start();
                                 }
+                                textView.setText("Número de Rx: 0");
                             }
+
                             })
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {

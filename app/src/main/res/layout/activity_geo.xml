@@ -235,6 +235,16 @@
 
 
         <Button
+            android:id="@+id/btnReload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageLocality"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="130dp"
+            android:text="Geo" />
+
+        <Button
             android:id="@+id/btnNext"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -256,5 +266,7 @@
 
 
     </RelativeLayout>
+
+
 
 </RelativeLayout>
