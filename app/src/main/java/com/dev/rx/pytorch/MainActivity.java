@@ -173,7 +173,7 @@ public class MainActivity extends AppCompatActivity implements Runnable {
         });
 
         try {
-            mModule = LiteModuleLoader.load(MainActivity.assetFilePath(getApplicationContext(), "best.torchscript_opt.ptl"));
+            mModule = LiteModuleLoader.load(MainActivity.assetFilePath(getApplicationContext(), "best2.torchscript_opt.ptl"));
             BufferedReader br = new BufferedReader(new InputStreamReader(getAssets().open("classes_.txt")));
 
 
