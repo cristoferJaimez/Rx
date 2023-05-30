@@ -9,12 +9,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dev.rx.R;
 import com.dev.rx.db.Mysql;
 import com.dev.rx.gallery.Gallery;
-import com.dev.rx.pytorch.ObjectDetectionActivity;
+import com.dev.rx.obser.CacheManager;
+import com.dev.rx.obser.CacheObserver;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -30,12 +30,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class Estadistica extends AppCompatActivity {
+public class Estadistica extends AppCompatActivity  implements CacheObserver {
 
 
     private TextView textDia, textSemana, textMes, textBalance;
     private ImageButton btn_back_gallery, btnReload;
-
+    private CacheManager cacheManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +50,9 @@ public class Estadistica extends AppCompatActivity {
 
         textBalance = findViewById(R.id.textBalance);
 
+        cacheManager = CacheManager.getInstance(this);
+        cacheManager.registerObserver(this);
+        cacheManager.notifyObserverWithCachedData(this);
 
 
 
@@ -68,6 +71,9 @@ public class Estadistica extends AppCompatActivity {
         textSemana.setText(" Rx de la semana #" + actualSemana + ":\n" + sumaSemana + "");
         textMes.setText(" Rx del Mes " + actualMes + ":\n" + sumaMes + "");
         textBalance.setText("Balance Semana #" + actualSemana);
+
+        // Crea una instancia de CacheManager
+        cacheManager = CacheManager.getInstance(this);
 
         btn_back_gallery.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -109,18 +115,18 @@ public class Estadistica extends AppCompatActivity {
         entries.add(new BarEntry(4f, jueves));
         entries.add(new BarEntry(5f, viernes));
         entries.add(new BarEntry(6f, sabado));
-// Repite para los otros días de la semana...
+        // Repite para los otros días de la semana...
 
         BarDataSet dataSet = new BarDataSet(entries, "Cantidad de fórmulas");
         BarData barData = new BarData(dataSet);
         dataSet.setDrawValues(true);
-// Configurar propiedades del gráfico
+        // Configurar propiedades del gráfico
         barChart.setData(barData);
         barChart.setFitBars(true);
         barChart.setDrawGridBackground(false);
         barChart.getDescription().setEnabled(false);
 
-// Configurar etiquetas del eje X (días de la semana)
+        // Configurar etiquetas del eje X (días de la semana)
         XAxis xAxis = barChart.getXAxis();
         xAxis.setValueFormatter(new IndexAxisValueFormatter(getDiasSemana())); // Función para obtener los días de la semana
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -159,7 +165,24 @@ public class Estadistica extends AppCompatActivity {
         // Aquí puedes agregar cualquier lógica que deseas ejecutar cuando la actividad se reanuda
 
         // Por ejemplo, puedes actualizar los datos desde la caché
+        cacheManager.notifyObserverWithCachedData(this);
 
     }
 
+    @Override
+    public void onCachedDataReceived(String actualMes) {
+
+    }
+
+    @Override
+    public void onCachedDataUpdated() {
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Desregistra esta actividad como observador al destruir la actividad
+        cacheManager.unregisterObserver(this);
+    }
 }

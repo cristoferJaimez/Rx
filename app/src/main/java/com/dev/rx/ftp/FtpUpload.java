@@ -13,6 +13,7 @@ import org.apache.commons.net.ftp.FTPReply;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Calendar;
 
 public class FtpUpload {
     private Context mContext;
@@ -62,9 +63,15 @@ public class FtpUpload {
                 throw new IOException("No se puede conectar al servidor FTP: puerto incorrecto");
             }
 
+            //semana actual
+            // Obtener la fecha actual
+            Calendar calendar = Calendar.getInstance();
+
+            // Obtener el número de la semana actual
+            int semanaActual = calendar.get(Calendar.WEEK_OF_YEAR);
 
             // Especifica la ruta de la carpeta remota a crear en el servidor FTP
-            String remoteDirPath = "/App/" + ftp;
+            String remoteDirPath = "/App/" + ftp + "semana_"+ semanaActual+"/";
             if (remoteDirPath.contains("S/N")) {
                 remoteDirPath = remoteDirPath.replace("S/N/", "");
             }
