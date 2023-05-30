@@ -2,18 +2,18 @@ package com.dev.rx;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Handler;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dev.rx.conditions.Conditions;
+import com.dev.rx.db.Mysql;
 import com.dev.rx.login.Login;
 
 public class IndexActivity extends AppCompatActivity {
@@ -24,6 +24,9 @@ public class IndexActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_index);
+        SharedPreferences prefs = getSharedPreferences("myPrefs", MODE_PRIVATE);
+        int fkPharma = prefs.getInt("fkPharma", 0); //
+        new Mysql().obtenerEstadisticaFarmacia(IndexActivity.this, fkPharma);
 
         ImageView imageView = findViewById(R.id.imageView2);
         Animation appearAnimation = AnimationUtils.loadAnimation(this, R.anim.appear);
@@ -32,7 +35,7 @@ public class IndexActivity extends AppCompatActivity {
         imageView.startAnimation(appearAnimation);
         textView.setAnimation(appearAnimation);
 
-        SharedPreferences prefs = getSharedPreferences("myPrefs", MODE_PRIVATE);
+
 
         new CountDownTimer(WAIT_TIME_MS, WAIT_TIME_MS) {
             @Override

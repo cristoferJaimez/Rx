@@ -24,12 +24,153 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Mysql {
+
+
+    //estadistica de farmacia
+    public void obtenerEstadisticaFarmacia(Context context, int idFarmacia) {
+        RequestQueue queue = Volley.newRequestQueue(context);
+        String url = "http://18.219.242.84/services/estadistica_farmacia.php";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Manejar la respuesta JSON
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            int sumaDia = jsonObject.getInt("suma_dia");
+                            int sumaSemana = jsonObject.getInt("suma_semana");
+                            int sumaMes = jsonObject.getInt("suma_mes");
+                            String actualMes = jsonObject.getString("mes_actual");
+                            String actualSemana = jsonObject.getString("semana_actual");
+                            String actualDia = jsonObject.getString("dia_actual");
+                            String regSemana = jsonObject.getString("registros_semana");
+
+                            // Guardar los resultados en SharedPreferences
+                            SharedPreferences prefs = context.getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = prefs.edit();
+                            editor.putInt("sumaDia", sumaDia);
+                            editor.putInt("sumaSemana", sumaSemana);
+                            editor.putInt("sumaMes", sumaMes);
+                            editor.putString("mes_actual", actualMes);
+                            editor.putString("semana_actual", actualSemana);
+                            editor.putString("dia_actual",actualDia);
+                            editor.putString("registro_semana", regSemana);
+                           editor.apply();
+
+
+
+                            // Mostrar los datos obtenidos
+                            //Toast.makeText(context, "Suma del día: " + diasSemanaString, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(context, "Suma de la semana: " + sumaSemana, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(context, "Suma del mes: " + sumaMes, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(context, "mes: " + actualMes, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(context, "semana: " + regSemana, Toast.LENGTH_SHORT).show();
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Toast.makeText(context, "Error al procesar la respuesta JSON", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        String errorMessage = "Unknown error";
+                        if (error.networkResponse != null && error.networkResponse.data != null) {
+                            try {
+                                errorMessage = new String(error.networkResponse.data, "UTF-8");
+                                System.err.println(errorMessage);
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        Log.d("EstadisticaErr", errorMessage);
+                        Toast.makeText(context, "Error al enviar la solicitud HTTP", Toast.LENGTH_SHORT).show();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                // Parámetros de la solicitud POST
+                Map<String, String> params = new HashMap<>();
+                params.put("id_farmacia", String.valueOf(idFarmacia));
+                return params;
+            }
+        };
+
+        queue.add(stringRequest);
+    }
+
+
+    // guardar numero de rx en base de datos por fecha y farmacia
+    public void enviarContador(Context context, int idFarmacia, int cantidad) {
+        RequestQueue queue = Volley.newRequestQueue(context);
+        String url = "http://18.219.242.84/services/contador.php";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Manejar la respuesta JSON
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            String fecha = jsonObject.getString("fecha");
+                            int cantidadActualizada = jsonObject.getInt("cantidad");
+                            int cantidadRegistrosMes = jsonObject.getInt("cantidad_registros_mes");
+
+                            // Mostrar los datos obtenidos
+                            Toast.makeText(context, "Fecha: " + fecha, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Cantidad actualizada: " + cantidadActualizada, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Cantidad de registros en el mes: " + cantidadRegistrosMes, Toast.LENGTH_SHORT).show();
+                            SharedPreferences prefs = context.getSharedPreferences("myPrefs", context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = prefs.edit();
+
+                            editor.putString("numRx", String.valueOf(cantidadRegistrosMes));
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Toast.makeText(context, "Error al procesar la respuesta JSON", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        String errorMessage = "Unknown error";
+                        if (error.networkResponse != null && error.networkResponse.data != null) {
+                            try {
+                                errorMessage = new String(error.networkResponse.data, "UTF-8");
+                                System.err.println(errorMessage);
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        Log.d("ContadorErr", errorMessage);
+                        Toast.makeText(context, "Error al enviar la solicitud HTTP", Toast.LENGTH_SHORT).show();
+                    }
+
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                // Parámetros de la solicitud POST
+                Map<String, String> params = new HashMap<>();
+                params.put("fk_farma", String.valueOf(idFarmacia));
+                params.put("cantidad", String.valueOf(cantidad));
+                return params;
+            }
+        };
+
+        queue.add(stringRequest);
+    }
+
+
     public void send(Context context,
                      String country,
                      String city,
@@ -307,14 +448,16 @@ public class Mysql {
                                 try {
                                     JSONArray jsonArray = new JSONArray(response);
                                     JSONObject jsonObject = jsonArray.getJSONObject(0);
-                                    //System.out.println(" ---> aqui ----Z>"  + jsonObject.getString("ftp"));
+                                    //System.out.println(" ---> aqui ----Z>"  + jsonObject.getString("id"));
                                     String ftp = jsonObject.getString("ftp");
                                     String pharma = jsonObject.getString("name_pharma");
+                                    int idpharma = jsonObject.getInt("id");
                                     SharedPreferences prefs = context.getSharedPreferences("myPrefs", context.MODE_PRIVATE);
                                     SharedPreferences.Editor editor = prefs.edit();
 
                                     editor.putString("ftp", ftp);
                                     editor.putString("name_pharma", pharma);
+                                    editor.putInt("fkPharma", idpharma);
                                     editor.apply();
                                 } catch (JSONException e) {
                                     e.printStackTrace();

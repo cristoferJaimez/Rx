@@ -22,6 +22,11 @@
         android:theme="@style/Theme.Rx"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".estadistica.Estadistica"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            android:exported="false"/>
+        <activity
             android:name=".conditions.Conditions"
             android:configChanges="orientation"
             android:exported="false"

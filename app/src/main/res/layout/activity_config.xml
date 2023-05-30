@@ -7,31 +7,19 @@
     tools:context=".config.Config">
 
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="143dp"
+        android:layout_height="140dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="40dp"
-        android:background="@drawable/spinner_border">
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="90dp"
+        android:layout_marginEnd="247dp"
+        app:srcCompat="@drawable/ic_launcher" />
 
-        <ImageView
-            android:id="@+id/imageView4"
-            android:layout_width="wrap_content"
-            android:layout_height="249dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="21dp"
-            android:layout_marginTop="80dp"
-            android:layout_marginEnd="21dp"
-            app:srcCompat="@drawable/ic_launcher" />
-
-        <Switch
+    <Switch
             android:id="@+id/switch1"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
@@ -39,7 +27,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="300dp"
             android:layout_marginEnd="60dp"
             android:text="Vista previa" />
 
@@ -73,7 +61,7 @@
             android:layout_height="40dp"
             android:layout_below="@+id/imageView4"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="300dp"
             android:layout_marginEnd="10dp"
             app:srcCompat="@drawable/icon_info_30x30" />
 
@@ -103,13 +91,31 @@
             android:layout_height="50dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="17dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/my_button_selector"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="26dp"
             app:srcCompat="@drawable/back_svgrepo_com" />
 
+    <ImageButton
+        android:id="@+id/btnLogOut"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="26dp"
+        android:layout_marginEnd="20dp"
+        app:srcCompat="@drawable/log_out_svgrepo_com" />
 
-    </RelativeLayout>
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="205dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="179dp"
+        android:layout_marginTop="114dp"
+        android:layout_marginEnd="27dp"
+        android:text="TextView" />
 
 
 </RelativeLayout>

@@ -17,6 +17,10 @@ import android.graphics.YuvImage;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.BackgroundColorSpan;
+import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.TextureView;
@@ -31,7 +35,10 @@ import androidx.annotation.WorkerThread;
 import androidx.camera.core.ImageProxy;
 import androidx.exifinterface.media.ExifInterface;
 
+import com.dev.rx.IndexActivity;
 import com.dev.rx.config.Config;
+import com.dev.rx.db.Mysql;
+import com.dev.rx.estadistica.Estadistica;
 import com.dev.rx.gallery.Gallery;
 import com.dev.rx.R;
 import com.dev.rx.gallery.ViewPicture;
@@ -58,7 +65,7 @@ public class ObjectDetectionActivity extends AbstractCameraXActivity<ObjectDetec
 
     private Bitmap bitmap ;
 
-    private TextView textNamePharma;
+    private TextView textNamePharma, textCountRx;
 
 
     @Override
@@ -68,33 +75,10 @@ public class ObjectDetectionActivity extends AbstractCameraXActivity<ObjectDetec
         imageLogOut = findViewById(R.id.btnLogOut);
 
         textNamePharma = findViewById(R.id.textNamePharma);
-
-        //images front notifications
-        ImageView imageView = findViewById(R.id.imageViewFront);
-        ImageView imageFtp = findViewById(R.id.imageFTPFront);
-        ImageView imageEncryt = findViewById(R.id.imageEncrytFront);
+        textCountRx = findViewById(R.id.editTextTextCount);
 
 
-        SharedPreferences prefs = getSharedPreferences("myPrefs", MODE_PRIVATE);
-        boolean switchState1 = prefs.getBoolean("switch1_state", false);
-        boolean switchState2 = prefs.getBoolean("switch2_state", false);
-        boolean switchState3 = prefs.getBoolean("switch3_state", false);
-        String name_pharma = prefs.getString("name_pharma", "S/N");
-
-        if(switchState1 == true) {
-            // Establece el Drawable en la ImageView
-            imageView.setBackgroundColor(GREEN);
-        }
-        if(switchState2 == true) {
-            // Establece el Drawable en la ImageView
-            imageFtp.setBackgroundColor(GREEN);
-        }
-        if(switchState3 == true) {
-            // Establece el Drawable en la ImageView
-            imageEncryt.setBackgroundColor(GREEN);
-        }
-
-        textNamePharma.setText(name_pharma);
+        info();
 
         imageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -194,7 +178,11 @@ public class ObjectDetectionActivity extends AbstractCameraXActivity<ObjectDetec
 
     }
 
-
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        recreate(); // Reiniciar la actividad
+    }
 
     static class AnalysisResult {
         private final ArrayList<Result> mResults;
@@ -346,6 +334,59 @@ public class ObjectDetectionActivity extends AbstractCameraXActivity<ObjectDetec
         return outputStream.toByteArray();
     }
 
+    public void info(){
+        //images front notifications
+        ImageView imageView = findViewById(R.id.imageViewFront);
+        ImageView imageFtp = findViewById(R.id.imageFTPFront);
+        ImageView imageEncryt = findViewById(R.id.imageEncrytFront);
+
+
+        SharedPreferences prefs = getSharedPreferences("myPrefs", MODE_PRIVATE);
+        boolean switchState1 = prefs.getBoolean("switch1_state", false);
+        boolean switchState2 = prefs.getBoolean("switch2_state", false);
+        boolean switchState3 = prefs.getBoolean("switch3_state", false);
+        String name_pharma = prefs.getString("name_pharma", "S/N");
+        String numRx = prefs.getString("numRx", "S/N");
+        int sumaDia = prefs.getInt("sumaDia", 0);
+        int sumaSemana = prefs.getInt("sumaSemana", 0);
+        int sumaMes = prefs.getInt("sumaMes", 0);
+
+
+        if(switchState1 == true) {
+            // Establece el Drawable en la ImageView
+            imageView.setBackgroundColor(GREEN);
+        }
+        if(switchState2 == true) {
+            // Establece el Drawable en la ImageView
+            imageFtp.setBackgroundColor(GREEN);
+        }
+        if(switchState3 == true) {
+            // Establece el Drawable en la ImageView
+            imageEncryt.setBackgroundColor(GREEN);
+        }
+
+        textNamePharma.setText(name_pharma);
+        String text = "Rx del Dia: " + sumaDia + "; Rx de la semana: " + sumaSemana +  "; Rx del Mes: "+ sumaMes;
+
+        SpannableString spannableString = new SpannableString(text);
+
+
+
+        // Establecer el texto en el TextView
+        textCountRx.setText(spannableString);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences prefs = getSharedPreferences("myPrefs", MODE_PRIVATE);
+        int fkPharma = prefs.getInt("fkPharma", 0); //
+        new Mysql().obtenerEstadisticaFarmacia(ObjectDetectionActivity.this, fkPharma);
+        // Aquí puedes agregar cualquier lógica que deseas ejecutar cuando la actividad se reanuda
+
+        // Por ejemplo, puedes actualizar los datos desde la caché
+
+    }
 
 
 }

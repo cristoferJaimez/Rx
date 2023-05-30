@@ -17,11 +17,12 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.dev.rx.R;
+import com.dev.rx.login.Login;
 import com.dev.rx.pytorch.ObjectDetectionActivity;
 
 public class Config extends AppCompatActivity {
 
-    private ImageButton btnBack;
+    private ImageButton btnBack, btnLogOut;
     private Switch switch1, switch2, switch3;
     private TextView textUser, textAddress, textNamePharma, textFtp;
 
@@ -50,6 +51,33 @@ public class Config extends AppCompatActivity {
         info = findViewById(R.id.info);
         info2 = findViewById(R.id.info2);
         info3 = findViewById(R.id.info3);
+        btnLogOut = findViewById(R.id.btnLogOut);
+
+        btnLogOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(Config.this);
+                builder.setTitle("Cerrar sesión");
+                builder.setMessage("¿Estás seguro de que quieres cerrar sesión?");
+                builder.setIcon(R.drawable.alert_octagon_svgrepo_com); // Aquí agregas la imagen deseada
+                builder.setPositiveButton("Sí", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        SharedPreferences prefs = getSharedPreferences("MisPreferencias", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.clear();
+                        editor.commit();
+                        Intent intent = new Intent(Config.this, Login.class);
+                        startActivity(intent);
+                        finish();
+
+                    }
+                });
+                builder.setNegativeButton("No", null);
+                builder.show();
+
+            }
+        });
 
 
 

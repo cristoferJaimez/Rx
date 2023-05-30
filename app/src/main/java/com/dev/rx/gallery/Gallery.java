@@ -9,9 +9,9 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.ShapeDrawable;
@@ -25,7 +25,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -35,7 +34,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.dev.rx.R;
-import com.dev.rx.customList.CustomListAdapter;
+import com.dev.rx.db.Mysql;
+import com.dev.rx.estadistica.Estadistica;
 import com.dev.rx.ftp.FtpUpload;
 import com.dev.rx.pytorch.ObjectDetectionActivity;
 
@@ -59,13 +59,12 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 
-import android.graphics.drawable.LayerDrawable;
 
 public class Gallery extends AppCompatActivity {
     private GridView gridView;
     private List<String> imagePaths = new ArrayList<>();
     private List<String> originalPaths = new ArrayList<>();
-    private ImageButton btnBackCamera, btnFTP, btnDelete;
+    private ImageButton btnBackCamera, btnFTP, btnDelete, btnChart;
     private List<Integer> selectedPositions = new ArrayList<>();
     private TextView textView;
     private ImageAdapter adapter;
@@ -73,6 +72,8 @@ public class Gallery extends AppCompatActivity {
     private String texto;
 
     private ListView listView;
+
+
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -84,6 +85,7 @@ public class Gallery extends AppCompatActivity {
         btnBackCamera = findViewById(R.id.btnBackCamera);
         btnFTP = findViewById(R.id.btnFTP);
         btnDelete = findViewById(R.id.btnDelete);
+        btnChart = findViewById(R.id.btnChart);
         textView = findViewById(R.id.numeroRx); // Reemplaza "text_view_id" con el ID de tu TextView
         ListView listView = findViewById(R.id.listView);
 
@@ -93,10 +95,18 @@ public class Gallery extends AppCompatActivity {
 
 
 
-
+        //ir a estadistica
+        btnChart.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                final Intent intent = new Intent(Gallery.this, Estadistica.class);
+                startActivity(intent);
+            }
+        });
 
 
             //cargar el listado de imagenes
+
+
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, imagePaths) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
@@ -110,11 +120,6 @@ public class Gallery extends AppCompatActivity {
         };
         listView.setAdapter(adapter);
         getImagesFiles();
-
-
-
-
-
 
 
         btnDelete.setOnClickListener(v -> {
@@ -217,6 +222,8 @@ public class Gallery extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        // boton para iniiar el envio ftp
         btnFTP.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (imagePaths.isEmpty()) {
@@ -247,6 +254,12 @@ public class Gallery extends AppCompatActivity {
                                         progressDialog[0].setIndeterminate(true);
                                         progressDialog[0].setMax(100);
                                         progressDialog[0].setCancelable(false);
+                                        progressDialog[0].setButton(DialogInterface.BUTTON_NEGATIVE, "Cancelar", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int whichButton) {
+                                                // Cancela la carga de archivos
+                                                progressDialog[0].dismiss();
+                                            }
+                                        });
                                         progressDialog[0].show();
                                     }
                                 });
@@ -329,7 +342,10 @@ public class Gallery extends AppCompatActivity {
                                         }
                                     }).start();
                                 }
+                                SharedPreferences prefs = getSharedPreferences("myPrefs", MODE_PRIVATE);
+                                int fkPharma = prefs.getInt("fkPharma", 0); //
                                 textView.setText("Número de Rx: 0");
+                                new Mysql().enviarContador(Gallery.this,fkPharma,imagePaths.size());
                             }
 
                             })

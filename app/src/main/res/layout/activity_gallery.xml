@@ -55,14 +55,24 @@
         />
 
     <ImageButton
+        android:id="@+id/btnChart"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="590dp"
+        android:layout_marginEnd="15dp"
+        android:contentDescription="btn"
+        app:srcCompat="@drawable/chart_pie_svgrepo_com" />
+
+    <ImageButton
         android:id="@+id/btnFTP"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="700dp"
-        android:layout_marginEnd="35dp"
-        android:background="@drawable/my_button_selector"
+        android:layout_marginTop="669dp"
+        android:layout_marginEnd="15dp"
         android:contentDescription="btn"
         app:srcCompat="@drawable/icon_ftp_30x30" />
 
@@ -72,10 +82,9 @@
         android:layout_height="50dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="35dp"
-        android:layout_marginTop="700dp"
-        android:background="@drawable/my_button_selector"
-        android:contentDescription="btn camera"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="669dp"
+       android:contentDescription="btn camera"
         app:srcCompat="@drawable/back_svgrepo_com" />
 
     <TextView
