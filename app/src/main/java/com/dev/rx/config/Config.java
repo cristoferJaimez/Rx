@@ -19,6 +19,12 @@ import android.widget.TextView;
 import com.dev.rx.R;
 import com.dev.rx.login.Login;
 import com.dev.rx.pytorch.ObjectDetectionActivity;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 public class Config extends AppCompatActivity {
 
@@ -27,7 +33,8 @@ public class Config extends AppCompatActivity {
     private TextView textUser, textAddress, textNamePharma, textFtp;
 
     private ImageView info, info2, info3;
-
+    private GoogleMap mMap;
+    private MapView mapView;
     @SuppressLint({"WrongViewCast", "MissingInflatedId"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,10 +43,30 @@ public class Config extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("myPrefs", MODE_PRIVATE);
         //obtenr datos para llenar campos
         int fkPharma = prefs.getInt("fkPharma", 0); //
-        String user = prefs.getString("dbUSer",  "sin datos...");
+        String user = prefs.getString("name_pharma",  "sin datos...");
         String address = prefs.getString("dbAddress",  "sin datos...");
         String type = prefs.getString("dbType",  "sin datos...");
         String ftp = prefs.getString("dbFtp",  "sin datos...");
+        String lat = prefs.getString("lat",  " 4.5709");
+        String lng = prefs.getString("lng",  " -74.2973");
+
+
+        // Obtener referencia al MapView del XML
+        mapView = findViewById(R.id.mapView);
+
+        // Importante: Llamar al método onCreate() del MapView
+        mapView.onCreate(savedInstanceState);
+
+        // Configurar el callback para el mapa cuando esté listo
+        mapView.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                mMap = googleMap;
+                LatLng location = new LatLng(Float.parseFloat(lat), Float.parseFloat(lng)); // San Francisco
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 16)); // Zoom in on location
+                mMap.addMarker(new MarkerOptions().position(location).title(user)); // Agregar marcador con título
+            }
+        });
 
 
         //hacer consulta de datos
@@ -52,6 +79,10 @@ public class Config extends AppCompatActivity {
         info2 = findViewById(R.id.info2);
         info3 = findViewById(R.id.info3);
         btnLogOut = findViewById(R.id.btnLogOut);
+        textUser = findViewById(R.id.textFarmaciaNombre);
+
+
+        textUser.setText(user);
 
         btnLogOut.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,6 +129,9 @@ public class Config extends AppCompatActivity {
         switch1.setChecked(switch1State);
         switch2.setChecked(switch2State);
         switch3.setChecked(switch3State);
+
+
+
 
         // Escuchar los cambios de estado en los Switches
         switch1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -188,6 +222,33 @@ public class Config extends AppCompatActivity {
 
         });
 
+
+
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mapView.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mapView.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mapView.onLowMemory();
     }
 
 

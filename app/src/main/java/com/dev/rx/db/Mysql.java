@@ -451,6 +451,8 @@ public class Mysql {
                                     //System.out.println(" ---> aqui ----Z>"  + jsonObject.getString("id"));
                                     String ftp = jsonObject.getString("ftp");
                                     String pharma = jsonObject.getString("name_pharma");
+                                    String latitud = jsonObject.getString("lat");
+                                    String longitud = jsonObject.getString("lng");
                                     int idpharma = jsonObject.getInt("id");
                                     SharedPreferences prefs = context.getSharedPreferences("myPrefs", context.MODE_PRIVATE);
                                     SharedPreferences.Editor editor = prefs.edit();
@@ -458,6 +460,8 @@ public class Mysql {
                                     editor.putString("ftp", ftp);
                                     editor.putString("name_pharma", pharma);
                                     editor.putInt("fkPharma", idpharma);
+                                    editor.putString("lat", latitud);
+                                    editor.putString("lng", longitud);
                                     editor.apply();
                                 } catch (JSONException e) {
                                     e.printStackTrace();

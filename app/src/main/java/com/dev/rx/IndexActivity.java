@@ -25,8 +25,6 @@ public class IndexActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_index);
         SharedPreferences prefs = getSharedPreferences("myPrefs", MODE_PRIVATE);
-        int fkPharma = prefs.getInt("fkPharma", 0); //
-        new Mysql().obtenerEstadisticaFarmacia(IndexActivity.this, fkPharma);
 
         ImageView imageView = findViewById(R.id.imageView2);
         Animation appearAnimation = AnimationUtils.loadAnimation(this, R.anim.appear);
