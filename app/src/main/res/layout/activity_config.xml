@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".config.Config">
-
+    android:padding="8dp"
+    android:fitsSystemWindows="true">
 
     <ImageView
         android:id="@+id/imageView4"
@@ -20,90 +20,95 @@
         app:srcCompat="@drawable/ic_launcher" />
 
     <Switch
-            android:id="@+id/switch1"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_below="@+id/imageView4"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="240dp"
-            android:layout_marginEnd="60dp"
-            android:text="Vista previa" />
+        android:id="@+id/switch1"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_below="@+id/imageView4"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="240dp"
+        android:layout_marginEnd="60dp"
+        android:text="Vista previa" />
 
-        <Switch
-            android:id="@+id/switch2"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_below="@+id/switch1"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="60dp"
-            android:text="Subir al ftp automaticamente" />
+    <Switch
+        android:id="@+id/switch2"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_below="@+id/switch1"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="60dp"
+        android:text="Subir al ftp automaticamente" />
 
-        <Switch
-            android:id="@+id/switch3"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_below="@+id/switch2"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="60dp"
-            android:text="Encriptar Rx" />
+    <Switch
+        android:id="@+id/switch3"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_below="@+id/switch2"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="60dp"
+        android:text="Encriptar Rx" />
 
-        <ImageView
-            android:id="@+id/info"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_below="@+id/imageView4"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="240dp"
-            android:layout_marginEnd="10dp"
-            app:srcCompat="@drawable/icon_info_30x30" />
+    <ImageView
+        android:id="@+id/info"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/imageView4"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="240dp"
+        android:layout_marginEnd="10dp"
+        app:srcCompat="@drawable/icon_info_30x30" />
 
-        <ImageView
-            android:id="@+id/info2"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_below="@+id/info"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="10dp"
-            app:srcCompat="@drawable/icon_info_30x30" />
+    <ImageView
+        android:id="@+id/info2"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/info"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="10dp"
+        app:srcCompat="@drawable/icon_info_30x30" />
 
-        <ImageView
-            android:id="@+id/info3"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_below="@+id/info2"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="10dp"
-            app:srcCompat="@drawable/icon_info_30x30" />
+    <ImageView
+        android:id="@+id/info3"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/info2"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="10dp"
+        app:srcCompat="@drawable/icon_info_30x30" />
+
+    <LinearLayout
+        android:id="@+id/button_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="8dp">
 
         <ImageButton
             android:id="@+id/btn_back_camera"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="26dp"
+            android:layout_marginEnd="8dp"
             app:srcCompat="@drawable/back_svgrepo_com" />
 
-    <ImageButton
-        android:id="@+id/btnLogOut"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="26dp"
-        android:layout_marginEnd="20dp"
-        app:srcCompat="@drawable/log_out_svgrepo_com" />
+        <ImageButton
+            android:id="@+id/btnLogOut"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="8dp"
+            app:srcCompat="@drawable/logout_1_svgrepo_com" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/textFarmaciaNombre"
@@ -122,6 +127,23 @@
         android:textAlignment="center"
         android:textSize="20sp" />
 
+    <TextView
+        android:id="@+id/textFarmaciaNombre2"
+        android:layout_width="210dp"
+        android:layout_height="48dp"
+        android:layout_above="@+id/mapView"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="98dp"
+        android:layout_marginTop="27dp"
+        android:layout_marginEnd="98dp"
+        android:layout_marginBottom="158dp"
+        android:gravity="center"
+        android:text="Configuraciones"
+        android:textAlignment="center"
+        android:textSize="20sp" />
+
     <com.google.android.gms.maps.MapView
         android:id="@+id/mapView"
         android:layout_width="379dp"
@@ -133,5 +155,11 @@
         android:layout_marginTop="11dp"
         android:layout_marginEnd="20dp" />
 
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="versión 1.0.0"
+        android:textSize="9sp" />
 
 </RelativeLayout>

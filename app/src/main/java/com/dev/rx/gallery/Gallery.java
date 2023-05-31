@@ -1,7 +1,5 @@
 package com.dev.rx.gallery;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -19,6 +17,7 @@ import android.graphics.drawable.shapes.RectShape;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -31,6 +30,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.dev.rx.R;
@@ -47,6 +48,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -59,15 +62,16 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 
-
 public class Gallery extends AppCompatActivity {
     private GridView gridView;
     private List<String> imagePaths = new ArrayList<>();
     private List<String> originalPaths = new ArrayList<>();
-    private ImageButton btnBackCamera, btnFTP, btnDelete, btnChart;
+    private ImageButton btnBackCamera, btnFTP, btnDelete, btnEstadistica;
     private List<Integer> selectedPositions = new ArrayList<>();
     private TextView textView;
     private ImageAdapter adapter;
+
+
 
     private String texto;
 
@@ -85,28 +89,21 @@ public class Gallery extends AppCompatActivity {
         btnBackCamera = findViewById(R.id.btnBackCamera);
         btnFTP = findViewById(R.id.btnFTP);
         btnDelete = findViewById(R.id.btnDelete);
-        btnChart = findViewById(R.id.btnChart);
+        btnEstadistica = findViewById(R.id.btnChart);
         textView = findViewById(R.id.numeroRx); // Reemplaza "text_view_id" con el ID de tu TextView
         ListView listView = findViewById(R.id.listView);
 
-        for (String path : imagePaths) {
-            Log.d("MyAppLLL", "Image path: " + path);
-        }
+        SharedPreferences prefs = getSharedPreferences("myPrefs", MODE_PRIVATE);
+        int idF = prefs.getInt("fkPharma", 0);
+
+
+        TextView emptyTextView = findViewById(R.id.emptyTextView);
 
 
 
-        //ir a estadistica
-        btnChart.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                final Intent intent = new Intent(Gallery.this, Estadistica.class);
-                startActivity(intent);
-            }
-        });
 
 
             //cargar el listado de imagenes
-
-
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, imagePaths) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
@@ -121,6 +118,12 @@ public class Gallery extends AppCompatActivity {
         listView.setAdapter(adapter);
         getImagesFiles();
 
+        // Verifica si la lista está vacía y muestra/oculta el TextView vacío
+        if (adapter.getCount() == 0) {
+            emptyTextView.setVisibility(View.VISIBLE);
+        } else {
+            emptyTextView.setVisibility(View.GONE);
+        }
 
         btnDelete.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(Gallery.this);
@@ -223,8 +226,19 @@ public class Gallery extends AppCompatActivity {
             }
         });
 
+        btnEstadistica.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                final Intent intent = new Intent(Gallery.this, Estadistica.class);
+                startActivity(intent);
+            }
+        });
+
         // boton para iniiar el envio ftp
+
         btnFTP.setOnClickListener(new View.OnClickListener() {
+            private int contador = 0;
+            private int contadorInicial = 0;
+
             public void onClick(View v) {
                 if (imagePaths.isEmpty()) {
                     // No hay archivos para subir, mostrar diálogo y salir de la función
@@ -237,8 +251,24 @@ public class Gallery extends AppCompatActivity {
                             });
                     AlertDialog dialog = builder.create();
                     dialog.show();
-                }else{
+                } else {
+                    contadorInicial = contador; // Guardar el valor inicial del contador
 
+                    // Verificar si hay Toast mostrándose y esperar hasta que terminen antes de continuar
+                    if (isToastShowing()) {
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                onClickAfterToast();
+                            }
+                        }, 100); // Esperar 100 ms y verificar nuevamente
+                    } else {
+                        onClickAfterToast();
+                    }
+                }
+            }
+
+            private void onClickAfterToast() {
                 AlertDialog.Builder builder = new AlertDialog.Builder(Gallery.this);
                 builder.setMessage("¿Desea subir las imágenes seleccionadas al servidor FTP?")
                         .setPositiveButton("Sí", new DialogInterface.OnClickListener() {
@@ -250,7 +280,6 @@ public class Gallery extends AppCompatActivity {
                                     public void run() {
                                         progressDialog[0] = new ProgressDialog(Gallery.this);
                                         progressDialog[0].setMessage("Cargando archivo...");
-                                        //progressDialog[0].setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
                                         progressDialog[0].setIndeterminate(true);
                                         progressDialog[0].setMax(100);
                                         progressDialog[0].setCancelable(false);
@@ -324,46 +353,77 @@ public class Gallery extends AppCompatActivity {
 
                                                 @Override
                                                 protected void onPostExecute(Boolean result) {
-                                                    if (result == true) {
+                                                    if (result) {
+                                                        contador++;
                                                         deleteImageFile(imagePath);
                                                         imagePaths.remove(imagePath);
                                                         progressDialog[0].dismiss();
+
                                                         activity.runOnUiThread(new Runnable() {
                                                             @Override
                                                             public void run() {
                                                                 gridView.invalidateViews();
                                                             }
                                                         });
-                                                    }else{
+                                                    }
+
+                                                    if (imagePaths.isEmpty()) {
                                                         progressDialog[0].dismiss();
+
+                                                        // Actualizar el contador solo una vez cuando se hayan subido todos los archivos
+                                                        if (contador > contadorInicial) {
+                                                            textView.setText("Número de Rx: " + imagePaths.size());
+                                                            new Mysql().enviarContador(Gallery.this, idF, contador);
+                                                        }
+
+                                                        contador = contadorInicial; // Restaurar el valor inicial del contador
+
+                                                        if (adapter.getCount() == 0) {
+                                                            emptyTextView.setVisibility(View.VISIBLE);
+                                                        } else {
+                                                            emptyTextView.setVisibility(View.GONE);
+                                                        }
                                                     }
                                                 }
                                             }.execute(imagePath);
                                         }
                                     }).start();
                                 }
-                                SharedPreferences prefs = getSharedPreferences("myPrefs", MODE_PRIVATE);
-                                int fkPharma = prefs.getInt("fkPharma", 0); //
-                                textView.setText("Número de Rx: 0");
-                                new Mysql().enviarContador(Gallery.this,fkPharma,imagePaths.size());
                             }
-
-                            })
+                        })
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 // Cancelar la acción de subir la imagen
-
                                 dialog.dismiss();
                             }
                         });
                 AlertDialog dialog = builder.create();
                 dialog.show();
-
-             }
             }
 
+            private boolean isToastShowing() {
+                try {
+                    Object service = getSystemService(Context.ACTIVITY_SERVICE);
+                    Class<?> toastClass = Class.forName("android.app.ITransientNotification");
+                    Field tnField = toastClass.getDeclaredField("mTN");
+                    tnField.setAccessible(true);
+                    Object tn = tnField.get(service);
+                    Method isToastShowingMethod = tn.getClass().getMethod("isToastShowing");
+                    return (boolean) isToastShowingMethod.invoke(tn);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return false;
+            }
         });
+
+
+
+
+
     }
+
+
     private void getImagesFiles() {
         // Obtener las rutas de las imágenes
         File directory = new File(Environment.getExternalStorageDirectory() + "/Pictures/");
@@ -526,4 +586,7 @@ public class Gallery extends AppCompatActivity {
             }
         }
     }
+
+
+
 }

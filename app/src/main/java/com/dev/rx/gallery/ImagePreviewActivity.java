@@ -1,29 +1,18 @@
 package com.dev.rx.gallery;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
+
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.dev.rx.R;
-import com.dev.rx.pytorch.ObjectDetectionActivity;
 import com.github.chrisbanes.photoview.PhotoView;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 
 public class ImagePreviewActivity extends AppCompatActivity {
 

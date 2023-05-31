@@ -1,9 +1,13 @@
 package com.dev.rx.ftp;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.widget.Toast;
+
+import com.dev.rx.db.Mysql;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
@@ -22,8 +26,10 @@ public class FtpUpload {
         mContext = context;
     }
     public boolean uploadFileToFTP(String filePath, Context context) {
+
         // Recuperar las preferencias compartidas
-        SharedPreferences prefs = context.getSharedPreferences("myPrefs", context.MODE_PRIVATE);
+        SharedPreferences prefs = context.getSharedPreferences("myPrefs", MODE_PRIVATE);
+        int idF = prefs.getInt("fkPharma", 0);
         // Obtener el valor actual de la clave "ftp" (usando una cadena vacía como valor predeterminado si no se encuentra la clave)
         String ftp = prefs.getString("ftp", "");
         Activity activity = (Activity) mContext;
@@ -112,6 +118,9 @@ public class FtpUpload {
                 @Override
                 public void run() {
                     Toast.makeText(mContext, "Archivo: " + finalName + " cargado exitosamente", Toast.LENGTH_SHORT).show();
+
+
+
 
                 }
             });

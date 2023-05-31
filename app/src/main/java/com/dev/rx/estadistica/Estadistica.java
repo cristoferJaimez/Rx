@@ -1,14 +1,14 @@
 package com.dev.rx.estadistica;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.dev.rx.R;
 import com.dev.rx.db.Mysql;
@@ -124,6 +124,12 @@ public class Estadistica extends AppCompatActivity  implements CacheObserver {
         barChart.setData(barData);
         barChart.setFitBars(true);
         barChart.setDrawGridBackground(false);
+        barChart.setDrawGridBackground(false); // Desactivar la cuadrícula de fondo
+
+
+
+        // Configurar color transparente para el fondo del gráfico
+        barChart.setBackgroundColor(Color.TRANSPARENT);
         barChart.getDescription().setEnabled(false);
 
         // Configurar etiquetas del eje X (días de la semana)

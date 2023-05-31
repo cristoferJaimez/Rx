@@ -68,7 +68,6 @@ public class Mysql {
 
 
                             // Mostrar los datos obtenidos
-                            //Toast.makeText(context, "Suma del día: " + diasSemanaString, Toast.LENGTH_SHORT).show();
                             //Toast.makeText(context, "Suma de la semana: " + sumaSemana, Toast.LENGTH_SHORT).show();
                             //Toast.makeText(context, "Suma del mes: " + sumaMes, Toast.LENGTH_SHORT).show();
                             //Toast.makeText(context, "mes: " + actualMes, Toast.LENGTH_SHORT).show();
@@ -76,7 +75,7 @@ public class Mysql {
 
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            Toast.makeText(context, "Error al procesar la respuesta JSON", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Error al procesar la respuesta JSON" + e, Toast.LENGTH_SHORT).show();
                         }
                     }
                 },

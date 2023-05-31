@@ -31,8 +31,8 @@
 
     <ImageButton
         android:id="@+id/btnTakePicture"
-        android:layout_width="90dp"
-        android:layout_height="90dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_marginBottom="16dp"
         android:contentDescription="take"
         app:layout_constraintBottom_toBottomOf="@+id/resultView"
@@ -55,7 +55,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.98"
-        app:srcCompat="@drawable/register_32x32" />
+        app:srcCompat="@drawable/files_svgrepo_com" />
 
     <ImageButton
         android:id="@+id/btnConfig"
@@ -67,7 +67,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.965"
-        app:srcCompat="@drawable/icon_config_50x50" />
+        app:srcCompat="@drawable/config_svgrepo_com" />
 
     <ImageView
         android:visibility="invisible"
@@ -131,6 +131,7 @@
         app:layout_constraintStart_toStartOf="parent"
         tools:layout_editor_absoluteY="0dp" />
 
+
     <TextView
         android:id="@+id/editTextTextCount"
         android:layout_width="match_parent"
@@ -141,12 +142,13 @@
         android:inputType="text"
         android:text="Contador Rx mes actual: 0"
         android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@+id/btnTakePicture"
+        app:layout_constraintBottom_toTopOf="@+id/textNamePharma"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/resultView"
+        app:layout_constraintTop_toBottomOf="@+id/textNamePharma"
         app:layout_constraintVertical_bias="0.028" />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

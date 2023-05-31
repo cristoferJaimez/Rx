@@ -1,11 +1,15 @@
 package com.dev.rx.ftp;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
 
+import com.dev.rx.db.Mysql;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,6 +29,10 @@ public class FtpAuto {
     private List<String> imagePaths = new ArrayList<>();
 
     public void ftpAuto(Context context) {
+        // Recuperar las preferencias compartidas
+        SharedPreferences prefs = context.getSharedPreferences("myPrefs", MODE_PRIVATE);
+        int idF = prefs.getInt("fkPharma", 0);
+
         // Obtener las rutas de las imágenes
         File directory = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath());
         File[] files = directory.listFiles();
@@ -116,7 +124,7 @@ public class FtpAuto {
 
                               // Eliminar la ruta de la imagen de la lista de rutas
                               imagePaths.remove(imagePath);
-
+                              new Mysql().enviarContador(context,idF,1 );
                               // Actualizar la vista de la galería
                           }else{}
 
