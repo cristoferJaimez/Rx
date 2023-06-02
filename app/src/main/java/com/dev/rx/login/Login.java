@@ -3,34 +3,35 @@ package com.dev.rx.login;
 import static androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG;
 import static androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.XmlResourceParser;
+import android.os.Bundle;
+import android.provider.Settings;
+import android.text.InputType;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.biometric.BiometricManager;
 import androidx.biometric.BiometricPrompt;
 import androidx.core.content.ContextCompat;
 
-import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.res.XmlResourceParser;
-import android.os.Bundle;
-import android.provider.Settings;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.Toast;
-
 import com.dev.rx.R;
 import com.dev.rx.db.Mysql;
+import com.dev.rx.ftp.protector.Protector;
 import com.dev.rx.permissions.Permissions;
 import com.dev.rx.pytorch.ObjectDetectionActivity;
-import com.dev.rx.register.Geo;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -48,6 +49,7 @@ public class Login extends AppCompatActivity {
     private Button btnLogin, btnRegister;
     private  EditText  usernameEditText, passwordEditText;
 
+    private  String username, password;
     private ImageButton biometricLoginButton;
     @SuppressLint("MissingInflatedId")
     @Override
@@ -64,6 +66,25 @@ public class Login extends AppCompatActivity {
         biometricLoginButton = findViewById(R.id.biometric_login);
         String user = null;
         XmlResourceParser parser = getResources().getXml(R.xml.config);
+
+
+        String username = usernameEditText.getText().toString().trim();
+        String password = passwordEditText.getText().toString().trim();
+        CheckBox showPasswordCheckBox = findViewById(R.id.showPasswordCheckBox);
+
+
+        showPasswordCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    passwordEditText.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                } else {
+                    passwordEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                }
+            }
+        });
+
+
 
         try {
             int eventType = parser.getEventType();
@@ -161,8 +182,11 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+
                 String username = usernameEditText.getText().toString().trim();
                 String password = passwordEditText.getText().toString().trim();
+
+
 
 
                 if (TextUtils.isEmpty(username)) {
@@ -196,7 +220,7 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(Login.this, Geo.class);
+                Intent intent = new Intent(Login.this, Protector.class);
                 startActivity(intent);
             }
         });

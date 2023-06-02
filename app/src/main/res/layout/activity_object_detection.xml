@@ -18,6 +18,9 @@
         android:scaleType="centerCrop"/>
 
 
+
+
+
     <com.dev.rx.pytorch.ResultView
         android:id="@+id/resultView"
         android:layout_width="match_parent"

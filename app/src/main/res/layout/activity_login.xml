@@ -55,6 +55,21 @@
             android:inputType="textPassword"
             android:textColor="#000000"
             android:textColorHint="#CCCCCC"  />
+
+
+        <CheckBox
+            android:id="@+id/showPasswordCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/editTextTextPassword"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="-25dp"
+            android:layout_marginEnd="50dp"
+            android:text="Mostrar contraseña" />
+
+
         <Button
             android:id="@+id/btnLogin"
             android:layout_width="wrap_content"
@@ -105,7 +120,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_marginStart="100dp"
-        android:layout_marginTop="39dp"
+        android:layout_marginTop="90dp"
         android:elevation="12dp"
         android:layout_marginEnd="100dp"
         app:srcCompat="@drawable/icon_logo" />

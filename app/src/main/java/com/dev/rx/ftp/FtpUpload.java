@@ -7,8 +7,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.widget.Toast;
 
-import com.dev.rx.db.Mysql;
-
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
@@ -75,9 +73,9 @@ public class FtpUpload {
 
             // Obtener el número de la semana actual
             int semanaActual = calendar.get(Calendar.WEEK_OF_YEAR);
-
+            int annoActual = calendar.get(Calendar.YEAR);
             // Especifica la ruta de la carpeta remota a crear en el servidor FTP
-            String remoteDirPath = "/App/" + ftp + "semana_"+ semanaActual+"/";
+            String remoteDirPath = "/App/" + ftp + "semana_"+semanaActual+"_" +annoActual+"/";
             if (remoteDirPath.contains("S/N")) {
                 remoteDirPath = remoteDirPath.replace("S/N/", "");
             }

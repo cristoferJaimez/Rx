@@ -1,6 +1,9 @@
 package com.dev.rx.db;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
@@ -16,9 +19,9 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.dev.rx.alerts.SuccessDialog;
 import com.dev.rx.login.Login;
 import com.dev.rx.pytorch.ObjectDetectionActivity;
+import com.dev.rx.register.Geo;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,6 +35,146 @@ import java.util.Map;
 
 public class Mysql {
 
+
+    //save rep - farma
+    public void enviarControl(Context context, String nombreFarmacia, String idRepresentante) {
+        RequestQueue queue = Volley.newRequestQueue(context);
+        String url = "http://18.219.242.84/services/control.php";
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+        builder.setTitle("Archivo completado con éxito")
+                .setMessage("Regresa a Login para iniciar sesion")
+                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Iniciar la actividad de inicio de sesión
+                    }
+                })
+                .show();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            boolean success = jsonObject.getBoolean("success");
+                            String message = jsonObject.getString("message");
+
+                            if (success) {
+                                // Los datos se guardaron correctamente en la tabla "control"
+                                Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                            } else {
+                                // Error al guardar los datos
+                                Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        String errorMessage = "Unknown error";
+                        if (error.networkResponse != null && error.networkResponse.data != null) {
+                            try {
+                                errorMessage = new String(error.networkResponse.data, "UTF-8");
+                                Toast.makeText(context, "Error en la solicitud: " + errorMessage, Toast.LENGTH_SHORT).show();
+                                Log.e("TextoError", errorMessage);
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                // Parámetros de la solicitud POST
+                Map<String, String> params = new HashMap<>();
+                params.put("nombre_farmacia", nombreFarmacia);
+                params.put("id_representante", idRepresentante);
+                return params;
+            }
+        };
+
+        queue.add(stringRequest);
+    }
+    private SendCallback sendCallback;
+
+
+    //permitido
+    public void enviarKeyWord(Context context, String texto) {
+        RequestQueue queue = Volley.newRequestQueue(context);
+        String url = "http://18.219.242.84/services/keyword.php";
+        // Obtener referencia a la actividad actual
+        final Activity activity = (Activity) context;
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            String texto = jsonObject.getString("texto");
+                            boolean existe = jsonObject.getBoolean("existe");
+                            String representante = jsonObject.getString("fk_representante");
+
+                            if (existe) {
+                                // El valor existe en la tabla "keyword"
+                                // Realizar acción correspondiente
+                                Toast.makeText(context, "KeyWord valido: " + texto + " " + representante, Toast.LENGTH_SHORT).show();
+                                Log.d("TextoResponse", "El valor existe: " + texto);
+                                Intent intent = new Intent(context, Geo.class);
+                                context.startActivity(intent);
+                                SharedPreferences prefs = context.getSharedPreferences("MisPreferencias", context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = prefs.edit();
+                                editor.putString("idRepresentante", representante); //Guarda el estado de inicio de sesión
+                                editor.apply();
+
+                                // Finalizar la actividad actual
+                                activity.finish();
+                            } else {
+                                // El valor no existe en la tabla "keyword"
+                                // Realizar otra acción correspondiente
+                                Toast.makeText(context, "KeyWord no existe: " + texto, Toast.LENGTH_SHORT).show();
+                                Log.d("TextoResponse", "El valor no existe: " + texto);
+                            }
+
+                            // Aquí puedes realizar las acciones necesarias con los valores obtenidos
+                            //Toast.makeText(context, "Respuesta del servidor positiva - Texto: " + texto + ", Existe: " + existe, Toast.LENGTH_SHORT).show();
+                            //Log.d("TextoResponse", "Texto: " + texto + ", Existe: " + existe);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        String errorMessage = "Unknown error";
+                        if (error.networkResponse != null && error.networkResponse.data != null) {
+                            try {
+                                errorMessage = new String(error.networkResponse.data, "UTF-8");
+                                Toast.makeText(context, texto + " Respuesta del servidor negativa: " + errorMessage, Toast.LENGTH_SHORT).show();
+                                Log.e("TextoError", errorMessage);
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                // Parámetros de la solicitud POST
+                Map<String, String> params = new HashMap<>();
+                params.put("texto", texto);  // Agregar el parámetro "texto"
+                return params;
+            }
+        };
+
+        queue.add(stringRequest);
+    }
 
     //estadistica de farmacia
     public void obtenerEstadisticaFarmacia(Context context, int idFarmacia) {
@@ -107,7 +250,6 @@ public class Mysql {
         queue.add(stringRequest);
     }
 
-
     // guardar numero de rx en base de datos por fecha y farmacia
     public void enviarContador(Context context, int idFarmacia, int cantidad) {
         RequestQueue queue = Volley.newRequestQueue(context);
@@ -169,7 +311,6 @@ public class Mysql {
         queue.add(stringRequest);
     }
 
-
     public void send(Context context,
                      String country,
                      String city,
@@ -199,7 +340,9 @@ public class Mysql {
                                     Toast.makeText(context, "Farmacia registrada!...", Toast.LENGTH_SHORT).show();
                                     Toast.makeText(context, "Ingrese credenciales para iniciar sessión!...", Toast.LENGTH_SHORT).show();
                                     // Continuar con el proceso de autenticación
-
+                                    if (sendCallback != null) {
+                                        sendCallback.onSendComplete();
+                                    }
 
 
                                     Intent intent = new Intent(context, Login.class);
@@ -493,6 +636,15 @@ public class Mysql {
     }
 
 
+
+    //interface
+    public interface SendCallback {
+        void onSendComplete();
+    }
+
+    public void setSendCallback(SendCallback callback) {
+        this.sendCallback = callback;
+    }
 
 }
 

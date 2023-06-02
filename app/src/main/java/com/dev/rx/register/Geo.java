@@ -1,20 +1,12 @@
 package com.dev.rx.register;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.widget.AdapterView;
-
-import androidx.annotation.ColorInt;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -23,22 +15,28 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import com.bumptech.glide.Glide;
 import com.dev.rx.R;
-import com.dev.rx.R.*;
+import com.dev.rx.R.id;
 import com.dev.rx.db.Mysql;
 import com.dev.rx.login.Login;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
-
 
 import java.io.IOException;
 import java.util.List;
@@ -47,7 +45,7 @@ import java.util.Locale;
 
 public class Geo extends AppCompatActivity {
 
-    private Button btnBack, btnNext,   btnReload;
+    private Button btnBack, btnNext;
 
     private static final int REQUEST_LOCATION_PERMISSION = 1;
     private FusedLocationProviderClient mFusedLocationProviderClient;
@@ -56,6 +54,7 @@ public class Geo extends AppCompatActivity {
     private ImageView imageViewStreetView, imageViewMap;
     private String dbUrlMap, dbUrlStreer;
 
+    private ImageButton   btnReload;
     private AutoCompleteTextView autoCompleteTextView, autoCompleteCadena, autoCompleteFarmacia;
 
     @SuppressLint({"StringFormatInvalid", "MissingInflatedId"})
@@ -79,6 +78,9 @@ public class Geo extends AppCompatActivity {
         autoCompleteTextView = findViewById(R.id.autoCompleteTextView);
         autoCompleteCadena = findViewById(id.autoCompleteCadena);
         autoCompleteFarmacia = findViewById(id.autoCompleteFarmacia);
+
+        SharedPreferences prefs = this.getSharedPreferences("MisPreferencias", Context.MODE_PRIVATE);
+
 
 
         //llenar selects
@@ -104,11 +106,11 @@ public class Geo extends AppCompatActivity {
                             String selectedItem = (String) parent.getItemAtPosition(position);
                             Toast.makeText(Geo.this, "Seleccionó: " + selectedItem, Toast.LENGTH_SHORT).show();
                             AutoCompleteTextView siguienteAutoCompleteTextView = findViewById(R.id.autoCompleteCadena);
-                            if(selectedItem.equals("Independiente")) {
+                            if(selectedItem.equals("INDEPENDIENTE")) {
                                 // Deshabilitar el siguiente AutoCompleteTextView
                                 siguienteAutoCompleteTextView.setEnabled(false);
                                 siguienteAutoCompleteTextView.setText("S/N");
-                            }else if(selectedItem.equals("Independientes Coopidrogas")){
+                            }else if(selectedItem.equals("COOPIDROGAS INDEPENDIENTE")){
                                 // Deshabilitar el siguiente AutoCompleteTextView
                                 siguienteAutoCompleteTextView.setEnabled(false);
                                 siguienteAutoCompleteTextView.setText("S/N");
@@ -238,6 +240,7 @@ public class Geo extends AppCompatActivity {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                finish();
                 Intent intent = new Intent(Geo.this, Login.class);
                 startActivity(intent);
             }
@@ -281,6 +284,12 @@ public class Geo extends AppCompatActivity {
                                     ""+namePharma,
                                     ""+ftp );
                             dialog.dismiss();
+
+
+                            //control
+                            String idRepresentante = prefs.getString("idRepresentante", "");
+                            mysql.enviarControl(Geo.this, namePharma, idRepresentante);
+
                         }
 
 
@@ -402,6 +411,7 @@ public class Geo extends AppCompatActivity {
             }
         }
     }
+
 
 
 

@@ -100,6 +100,7 @@ public class FtpAuto {
                                    deleteImageFile(imagePath);
                                    // Eliminar la ruta de la imagen de la lista de rutas
                                    imagePaths.remove(imagePath);
+                                   new Mysql().enviarContador(context,idF,1 );
                                    // Eliminar archivo temporal después de subirlo al servidor FTP
                                    finalTempFile.delete();
                                }else{}
