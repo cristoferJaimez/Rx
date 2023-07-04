@@ -204,10 +204,7 @@ public class Login extends AppCompatActivity {
                     imm.showSoftInput(passwordEditText, InputMethodManager.SHOW_IMPLICIT);
                     return;
                 }else{
-
-
-
-                      new Mysql().users(Login.this, username,password);
+                    new Mysql().users(Login.this, username,password);
 
                     //Toast.makeText(getApplicationContext(),
                     //        "Authentication succeeded!", Toast.LENGTH_SHORT).show();

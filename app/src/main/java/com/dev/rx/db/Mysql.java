@@ -39,7 +39,7 @@ public class Mysql {
     //save rep - farma
     public void enviarControl(Context context, String nombreFarmacia, String idRepresentante) {
         RequestQueue queue = Volley.newRequestQueue(context);
-        String url = "http://18.219.242.84/services/control.php";
+        String url = "http://3.144.242.204/services/control.php";
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
@@ -105,7 +105,7 @@ public class Mysql {
     //permitido
     public void enviarKeyWord(Context context, String texto) {
         RequestQueue queue = Volley.newRequestQueue(context);
-        String url = "http://18.219.242.84/services/keyword.php";
+        String url = "http://3.144.242.204/services/keyword.php";
         // Obtener referencia a la actividad actual
         final Activity activity = (Activity) context;
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
@@ -179,7 +179,7 @@ public class Mysql {
     //estadistica de farmacia
     public void obtenerEstadisticaFarmacia(Context context, int idFarmacia) {
         RequestQueue queue = Volley.newRequestQueue(context);
-        String url = "http://18.219.242.84/services/estadistica_farmacia.php";
+        String url = "http://3.144.242.204/services/estadistica_farmacia.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
@@ -206,7 +206,7 @@ public class Mysql {
                             editor.putString("semana_actual", actualSemana);
                             editor.putString("dia_actual",actualDia);
                             editor.putString("registro_semana", regSemana);
-                           editor.apply();
+                            editor.apply();
 
 
 
@@ -253,7 +253,7 @@ public class Mysql {
     // guardar numero de rx en base de datos por fecha y farmacia
     public void enviarContador(Context context, int idFarmacia, int cantidad) {
         RequestQueue queue = Volley.newRequestQueue(context);
-        String url = "http://18.219.242.84/services/contador.php";
+        String url = "http://3.144.242.204/services/contador.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
@@ -326,7 +326,7 @@ public class Mysql {
 
         RequestQueue queue = Volley.newRequestQueue(context);
         Handler handler = new Handler(Looper.getMainLooper());
-        String url = "http://18.219.242.84/services/register_pharma_users.php";
+        String url = "http://3.144.242.204/services/register_pharma_users.php";
 
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
@@ -402,7 +402,7 @@ public class Mysql {
     //llenar campos autocomplete
     public void selectOne(Context context,
                           VolleyCallback callback) {
-        String url = "http://18.219.242.84/services/select_type_pharma.php";
+        String url = "http://3.144.242.204/services/select_type_pharma.php";
         List<String> listaValores = new ArrayList<>();
 
         // Crear una solicitud HTTP utilizando la biblioteca Volley
@@ -439,7 +439,7 @@ public class Mysql {
 
     public void selectTwo(Context context,
                           VolleyCallback callback) {
-        String url = "http://18.219.242.84/services/select_type_cadena.php";
+        String url = "http://3.144.242.204/services/select_type_cadena.php";
 
         // Crear una solicitud HTTP utilizando la biblioteca Volley
         RequestQueue queue = Volley.newRequestQueue(context);
@@ -472,8 +472,8 @@ public class Mysql {
     }
 
     public void selectTree(Context context,
-                          VolleyCallback callback) {
-        String url = "http://18.219.242.84/services/select_pharma.php";
+                           VolleyCallback callback) {
+        String url = "http://3.144.242.204/services/select_pharma.php";
 
         // Crear una solicitud HTTP utilizando la biblioteca Volley
         RequestQueue queue = Volley.newRequestQueue(context);
@@ -508,13 +508,13 @@ public class Mysql {
 
     // validar usuario
     public void users(Context context,
-                     String user,
-                     String pw
-                    ) {
+                      String user,
+                      String pw
+    ) {
 
         RequestQueue queue = Volley.newRequestQueue(context);
         Handler handler = new Handler(Looper.getMainLooper());
-        String url = "http://18.219.242.84/services/validate_user.php";
+        String url = "http://3.144.242.204/services/validate_user.php";
 
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
@@ -578,7 +578,7 @@ public class Mysql {
     public void getUsers(Context context, String user) {
         RequestQueue queue = Volley.newRequestQueue(context);
         Handler handler = new Handler(Looper.getMainLooper());
-        String url = "http://18.219.242.84/services/select_data_user.php";
+        String url = "http://3.144.242.204/services/select_data_user.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
@@ -647,5 +647,4 @@ public class Mysql {
     }
 
 }
-
 

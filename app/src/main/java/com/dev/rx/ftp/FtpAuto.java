@@ -4,10 +4,10 @@ import static android.content.Context.MODE_PRIVATE;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
-
 
 import com.dev.rx.db.Mysql;
 
@@ -27,7 +27,8 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class FtpAuto {
     private List<String> imagePaths = new ArrayList<>();
-
+    private int contador = 0;
+    private int contadorInicial = 0;
     public void ftpAuto(Context context) {
         // Recuperar las preferencias compartidas
         SharedPreferences prefs = context.getSharedPreferences("myPrefs", MODE_PRIVATE);
@@ -45,10 +46,8 @@ public class FtpAuto {
         }
 
         if (imagePaths.isEmpty()) {
-
             Toast.makeText(context, "No hay imágenes para subir", Toast.LENGTH_SHORT).show();
-        }
-        else if (isImageEncrypted(imagePaths.toString())) {
+        } else if (isImageEncrypted(imagePaths.toString())) {
             File tempFile = null; // declarar la variable fuera del bucle
 
             for (String imagePath : imagePaths) {
@@ -87,52 +86,99 @@ public class FtpAuto {
                         e.printStackTrace();
                     }
 
-                    // Verificar si el archivo temporal existe antes de subirlo al servidor FTP
+                    // Verificar si el archivo temporal existe antes de subirlo al servidor S3
                     if (tempFile != null && tempFile.exists()) {
                         File finalTempFile = tempFile;
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
-                                Log.d("Archivo temporal", "Se ha creado correctamente: " + finalTempFile.getAbsolutePath());
-                              boolean  res = new FtpUpload(context).uploadFileToFTP(finalTempFile.getAbsolutePath(), context);
-                               if(res == true){
-                                   // Eliminar la imagen encriptada una vez subida al FTP
-                                   deleteImageFile(imagePath);
-                                   // Eliminar la ruta de la imagen de la lista de rutas
-                                   imagePaths.remove(imagePath);
-                                   new Mysql().enviarContador(context,idF,1 );
-                                   // Eliminar archivo temporal después de subirlo al servidor FTP
-                                   finalTempFile.delete();
-                               }else{}
+                                new AsyncTask<String, Void, Void>() {
+                                    @Override
+                                    protected Void doInBackground(String... params) {
+                                        S3Upload s3Upload = new S3Upload(context);
+                                        S3Upload.UploadCallback callback = new S3Upload.UploadCallback() {
+                                            @Override
+                                            public void onUploadComplete(boolean isSuccess) {
+                                                // Manejar la respuesta de carga (true o false) aquí
+                                                if (isSuccess) {
+                                                    deleteImageFile(imagePath);
+                                                    imagePaths.remove(imagePath);
+                                                    contador++; // Incrementar el contador
+
+                                                    Log.d("contadorInit", String.valueOf(contador));
+                                                }
+                                            }
+                                        };
+
+                                        s3Upload.setUploadCallback(callback);
+                                        s3Upload.uploadFileToS3(finalTempFile.getAbsolutePath());
+
+                                        // Devolver null aquí, ya que la respuesta se manejará en el método onUploadComplete
+                                        return null;
+                                    }
+
+                                    private void onPostExecute() {
+                                        Log.d("contador", String.valueOf(contador));
+                                        // Actualizar el contador solo una vez que se hayan cargado todos los archivos
+                                        if (contador > contadorInicial) {
+                                            contadorInicial = contador; // Actualizar el contador inicial
+                                            //textView.setText("Número de Rx: " + contador);
+                                            new Mysql().enviarContador(context, idF, contador);
+                                        }
+
+
+
+                                    }
+                                }.execute(imagePath);
                             }
+
                         }).start();
                     }
                 }
             }
-
-
-        }
-        else {
+        } else {
             for (String imagePath : imagePaths) {
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            // Subir el archivo al servidor FTP
-                          boolean res =  new FtpUpload(context).uploadFileToFTP(imagePath, context);
-                          if(res == true){
-                              // Eliminar la imagen una vez subida al FTP
-                              deleteImageFile(imagePath);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        new AsyncTask<String, Void, Void>() {
+                            @Override
+                            protected Void doInBackground(String... params) {
+                                S3Upload s3Upload = new S3Upload(context);
+                                S3Upload.UploadCallback callback = new S3Upload.UploadCallback() {
+                                    @Override
+                                    public void onUploadComplete(boolean isSuccess) {
+                                        // Manejar la respuesta de carga (true o false) aquí
+                                        if (isSuccess) {
+                                            deleteImageFile(imagePath);
+                                            imagePaths.remove(imagePath);
+                                            contador++; // Incrementar el contador
 
-                              // Eliminar la ruta de la imagen de la lista de rutas
-                              imagePaths.remove(imagePath);
-                              new Mysql().enviarContador(context,idF,1 );
-                              // Actualizar la vista de la galería
-                          }else{}
+                                            Log.d("contadorInit", String.valueOf(contador));
+                                        }
+                                    }
+                                };
 
+                                s3Upload.setUploadCallback(callback);
+                                s3Upload.uploadFileToS3(params[0]);
 
-                        }
-                    }).start();
+                                // Devolver null aquí, ya que la respuesta se manejará en el método onUploadComplete
+                                return null;
+                            }
 
+                            private void onPostExecute() {
+                                Log.d("contador", String.valueOf(contador));
+                                // Actualizar el contador solo una vez que se hayan cargado todos los archivos
+                                if (contador > contadorInicial) {
+                                    contadorInicial = contador; // Actualizar el contador inicial
+
+                                    new Mysql().enviarContador(context, idF, contador);
+                                }
+                            }
+                        }.execute(imagePath);
+                    }
+
+                }).start();
             }
         }
     }
@@ -142,6 +188,7 @@ public class FtpAuto {
         String fileName = file.getName();
         return fileName.contains("_enc");
     }
+
     public byte[] decryptImage(byte[] encryptedBytes) throws Exception {
         // Decrypt the image using AES decryption with the pre-defined key
         byte[] key = "mySecretKey12345".getBytes();

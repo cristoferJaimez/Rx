@@ -37,7 +37,7 @@ import com.bumptech.glide.Glide;
 import com.dev.rx.R;
 import com.dev.rx.db.Mysql;
 import com.dev.rx.estadistica.Estadistica;
-import com.dev.rx.ftp.FtpUpload;
+import com.dev.rx.ftp.S3Upload;
 import com.dev.rx.pytorch.ObjectDetectionActivity;
 
 import java.io.BufferedInputStream;
@@ -289,7 +289,7 @@ public class Gallery extends AppCompatActivity {
                                                 progressDialog[0].dismiss();
                                             }
                                         });
-                                        progressDialog[0].show();
+                                       // progressDialog[0].show();
                                     }
                                 });
 
@@ -345,10 +345,12 @@ public class Gallery extends AppCompatActivity {
                                             }
 
                                             // Realiza la operación de red en un hilo separado utilizando AsyncTask
-                                            new AsyncTask<String, Void, Boolean>() {
+                                            /*new AsyncTask<String, Void, Boolean>() {
                                                 @Override
                                                 protected Boolean doInBackground(String... params) {
-                                                    return new FtpUpload(Gallery.this).uploadFileToFTP(params[0], Gallery.this);
+                                                    return new S3Upload(Gallery.this).uploadFileToS3(params[0], Gallery.this);
+                                                    //new FtpUpload(Gallery.this).uploadFileToFTP(params[0], Gallery.this);
+                                                    //return true;
                                                 }
 
                                                 @Override
@@ -385,7 +387,62 @@ public class Gallery extends AppCompatActivity {
                                                         }
                                                     }
                                                 }
+                                            }.execute(imagePath); */
+
+                                            new AsyncTask<String, Void, Void>() {
+                                                @Override
+                                                protected Void doInBackground(String... params) {
+                                                    S3Upload s3Upload = new S3Upload(Gallery.this);
+                                                    S3Upload.UploadCallback callback = new S3Upload.UploadCallback() {
+                                                        @Override
+                                                        public void onUploadComplete(boolean isSuccess) {
+                                                            // Handle the upload response (true or false) here
+                                                            if (isSuccess) {
+                                                                deleteImageFile(imagePath);
+                                                                imagePaths.remove(imagePath);
+                                                                contador++; // Increment the counter
+
+                                                                Log.d("contadorInit", String.valueOf(contador));
+
+                                                                runOnUiThread(new Runnable() {
+                                                                    @Override
+                                                                    public void run() {
+                                                                        gridView.invalidateViews();
+
+                                                                        // Check if all files have been uploaded
+                                                                        if (imagePaths.isEmpty()) {
+                                                                            onPostExecute(); // Call onPostExecute when all files are uploaded
+                                                                        }
+                                                                    }
+                                                                });
+                                                            }
+                                                        }
+                                                    };
+
+                                                    s3Upload.setUploadCallback(callback);
+                                                    s3Upload.uploadFileToS3(params[0]);
+
+                                                    // Return null here since the response will be handled in the onUploadComplete method
+                                                    return null;
+                                                }
+
+                                                private void onPostExecute() {
+                                                    Log.d("contador", String.valueOf(contador));
+                                                    // Update the counter only once when all files have been uploaded
+                                                    if (contador > contadorInicial) {
+                                                        contadorInicial = contador; // Update the initial counter
+                                                        textView.setText("Número de Rx: " + contador);
+                                                        new Mysql().enviarContador(Gallery.this, idF, contador);
+                                                    }
+                                                    if (adapter.getCount() == 0) {
+                                                        emptyTextView.setVisibility(View.VISIBLE);
+                                                    } else {
+                                                        emptyTextView.setVisibility(View.GONE);
+                                                    }
+                                                }
                                             }.execute(imagePath);
+
+
                                         }
                                     }).start();
                                 }

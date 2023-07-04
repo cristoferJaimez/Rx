@@ -87,13 +87,13 @@ public class Geo extends AppCompatActivity {
         Mysql mysql = new Mysql();
         mysql.selectOne(this, new Mysql.VolleyCallback() {
             @Override
-            public void onSuccess(List<String> result) {
+            public void onSuccess(List<String> listaValores) {
 
                     // Obtener una referencia al AutoCompleteTextView del diseño
                     AutoCompleteTextView autoCompleteTextView = findViewById(R.id.autoCompleteTextView);
 
                     // Configure un ArrayAdapter con sus datos
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>(Geo.this, android.R.layout.simple_dropdown_item_1line, result);
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(Geo.this, android.R.layout.simple_dropdown_item_1line, listaValores);
 
                     // Establecer el adaptador en el AutoCompleteTextView
                     autoCompleteTextView.setAdapter(adapter);
@@ -142,14 +142,14 @@ public class Geo extends AppCompatActivity {
 
         mysql.selectTwo(this, new Mysql.VolleyCallback() {
             @Override
-            public void onSuccess(List<String> result) {
+            public void onSuccess(List<String> listaValores) {
 
 
                     // Obtener una referencia al AutoCompleteTextView del diseño
                     AutoCompleteTextView autoCompleteTextView = findViewById(id.autoCompleteCadena);
 
                     // Configure un ArrayAdapter con sus datos
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>(Geo.this, android.R.layout.simple_dropdown_item_1line, result);
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(Geo.this, android.R.layout.simple_dropdown_item_1line, listaValores);
 
                     // Establecer el adaptador en el AutoCompleteTextView
                     autoCompleteTextView.setAdapter(adapter);
@@ -186,12 +186,12 @@ public class Geo extends AppCompatActivity {
 
         mysql.selectTree(this, new Mysql.VolleyCallback() {
             @Override
-            public void onSuccess(List<String> result) {
+            public void onSuccess(List<String> listaValores) {
                 // Obtener una referencia al AutoCompleteTextView del diseño
                 AutoCompleteTextView autoCompleteTextView = findViewById(id.autoCompleteFarmacia);
 
                 // Configure un ArrayAdapter con sus datos
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(Geo.this, android.R.layout.simple_dropdown_item_1line, result);
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(Geo.this, android.R.layout.simple_dropdown_item_1line, listaValores);
 
                 // Establecer el adaptador en el AutoCompleteTextView
                 autoCompleteTextView.setAdapter(adapter);
@@ -247,6 +247,7 @@ public class Geo extends AppCompatActivity {
         });
 
 
+        /*
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -294,6 +295,53 @@ public class Geo extends AppCompatActivity {
 
 
 
+                    });
+                    builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                }
+            }
+        });
+*/
+        btnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Obtener valores de los campos
+                String country = editTextTextCountry.getText().toString();
+                String city = editTextTextCity.getText().toString();
+                String addressLine = editTextTextCode.getText().toString();
+                String lat = editTextTextLat.getText().toString();
+                String lng = editTextTextLng.getText().toString();
+                String typePharma = autoCompleteTextView.getText().toString();
+                String classPharma = autoCompleteCadena.getText().toString();
+                String namePharma = autoCompleteFarmacia.getText().toString();
+                String ftp = "Rx/" + country + "/" + city + "/" + typePharma + "/" + classPharma + "/" + namePharma + "/";
+
+                // Verificar si los campos autocompletados no están vacíos
+                if (typePharma.isEmpty() || classPharma.isEmpty() || namePharma.isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "Por favor, completa los campos vacíos", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Crear diálogo de confirmación
+                    AlertDialog.Builder builder = new AlertDialog.Builder(Geo.this);
+                    builder.setTitle("Confirmar datos");
+                    builder.setMessage("¿Estás seguro de que deseas enviar estos datos?");
+                    builder.setPositiveButton("Sí", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Enviar datos a la base de datos MySQL
+                            Mysql mysql = new Mysql();
+                            mysql.send(Geo.this, country, city, addressLine, lat, lng, dbUrlMap, dbUrlStreer, typePharma, classPharma, namePharma, ftp);
+                            dialog.dismiss();
+
+                            // Control
+                            String idRepresentante = prefs.getString("idRepresentante", "");
+                            mysql.enviarControl(Geo.this, namePharma, idRepresentante);
+                        }
                     });
                     builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
                         @Override
