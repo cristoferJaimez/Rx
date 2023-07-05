@@ -67,8 +67,8 @@ public class S3Upload {
         int idF = prefs.getInt("fkPharma", 0);
         String bucketName = prefs.getString("bucketName", "panels3");
         String ftp = prefs.getString("ftp", "");
-        String accessKey = "AKIA3IJLLGXKJWJPQBHK"; // Replace with your AWS access credentials
-        String secretKey = "zIQDV50u64cX1W4Sg6ZSHVrxX0wz5Fi+EgBMfua7"; // Replace with your AWS secret credentials
+        String accessKey = ""; // Replace with your AWS access credentials
+        String secretKey = ""; // Replace with your AWS secret credentials
         Calendar calendar = Calendar.getInstance();
         int semanaActual = calendar.get(Calendar.WEEK_OF_YEAR);
         int annoActual = calendar.get(Calendar.YEAR);
